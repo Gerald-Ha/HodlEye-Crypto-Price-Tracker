@@ -50,6 +50,9 @@ The tool refreshes prices every **5 seconds**, which may introduce a slight dela
 - You can set **as many alarms as you like** — no daily or total limit.
 - Track **any number of cryptocurrencies** in the list simultaneously.
 
+<img src="https://github.com/user-attachments/assets/276de04d-dcf6-411a-b550-cbb5104c1579" width="auto" height="400">
+
+
 ### Price Updates
 - **Binance** and **OKX** are integrated as the primary data sources.
 - By default, HodlEye tries Binance first; if that fails or is forced off, it falls back to OKX.
@@ -75,8 +78,16 @@ The tool refreshes prices every **5 seconds**, which may introduce a slight dela
   - `https://decrypt.co/feed`
 - Quickly view and filter recent articles within the built-in News modal.
 
+
+<img src="https://github.com/user-attachments/assets/f0727b39-a075-4d50-9600-f53c803d4a1b" width="auto" height="400">
+
+
 ### Economic Calendar
 - The **Economic Calendar** button opens a modal with an [Investing.com](https://www.investing.com/) iframe, showing major economic events such as central bank decisions and market-impacting announcements.
+
+<img src="https://github.com/user-attachments/assets/e254301e-9aaa-48d8-84e7-6faa598ca8be" width="600" height="auto">
+
+
 
 ---
 
@@ -114,6 +125,10 @@ The tool refreshes prices every **5 seconds**, which may introduce a slight dela
 ---
 
 ## Windows Notification App: HodlEye_Notify
+
+<img src="https://github.com/user-attachments/assets/a3356708-1b3a-4fb8-9a71-d1af88f29c5f" width="auto" height="250">
+<img src="https://github.com/user-attachments/assets/cb0eb2a8-45fb-4a80-bb81-56957e838153" width="auto" height="250">
+
 
 If you prefer not to keep the HodlEye Crypto Price Tracker web interface open in your browser all the time, you can use a lightweight Windows application called **HodlEye_Notify**. This tool connects directly to the same endpoint as the Docker container and will display notifications on your desktop whenever an alarm is triggered. 
 
