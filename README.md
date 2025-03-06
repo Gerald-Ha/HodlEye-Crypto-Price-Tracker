@@ -126,8 +126,8 @@ The tool refreshes prices every **5 seconds**, which may introduce a slight dela
 
 ## Windows Notification App: HodlEye_Notify
 
-<img src="https://github.com/user-attachments/assets/a3356708-1b3a-4fb8-9a71-d1af88f29c5f" width="auto" height="250">
-<img src="https://github.com/user-attachments/assets/cb0eb2a8-45fb-4a80-bb81-56957e838153" width="auto" height="250">
+<img src="https://github.com/user-attachments/assets/a3356708-1b3a-4fb8-9a71-d1af88f29c5f" width="auto" height="150">
+<img src="https://github.com/user-attachments/assets/cb0eb2a8-45fb-4a80-bb81-56957e838153" width="auto" height="150">
 
 
 If you prefer not to keep the HodlEye Crypto Price Tracker web interface open in your browser all the time, you can use a lightweight Windows application called **HodlEye_Notify**. This tool connects directly to the same endpoint as the Docker container and will display notifications on your desktop whenever an alarm is triggered. 
