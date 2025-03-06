@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HodlEye Crypto Price Tracker</title>
+    
+    <link rel="stylesheet" href="style.css">
+	<link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body class="dark">
+    
+    <div class="header">
+        <h1>HodlEye Crypto Price Tracker</h1>
+        <div class="button-grid-container">
+            <div class="grid-left">
+                
+                <button onclick="openCryptoNews()">Crypto News</button>
+                <button onclick="openEconomicCalendar()">Economic Calendar</button>
+            </div>
+            <div class="grid-middle">
+                <button onclick="openAddCryptoModal()">Add Crypto</button>
+                <button onclick="toggleEditMode()" id="editButton">Edit List</button>
+                <button class="alarm-btn" onclick="openAlarmModal()">Alarms⏰</button>
+                <button class="options-btn" onclick="openOptionsModal()">Options</button>
+            </div>
+            <div class="grid-right">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="left-column">
+            <div class="grid-container" id="cryptoGrid">
+               
+            </div>
+        </div>
+
+       
+        <div class="right-column">
+            <div class="notify-heading">
+                <span>Notify</span>
+                <button onclick="clearNotifications()">Clear List</button>
+            </div>
+            <ul class="notify-list" id="notifyList">
+               
+            </ul>
+
+            
+            <button class="coffee-btn" onclick="openBuyMeModal()">
+                Buy me a Coffee <img src="images/coffee.svg" alt="Coffee" class="coffee-icon">
+            </button>
+
+            
+            <button onclick="window.open('https://www.gerald-hasani.com', '_blank')">Developer</button>
+        </div>
+    </div>
+
+   
+    <div id="alarmModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAlarmModal()">&times;</span>
+            <h2>Price Alarms</h2>
+
+            <div class="alarm-list-container" id="alarmListContainer">
+               
+            </div>
+
+            <label for="alarmSymbol">Symbol:</label>
+            <select id="alarmSymbol"></select><br>
+
+            <label for="alarmPrice">Alarm Price (USDT):</label>
+            <input type="number" id="alarmPrice" placeholder="Price"><br>
+
+            <label for="alarmFrequency">Frequency:</label>
+            <select id="alarmFrequency">
+                <option value="Once">Once</option>
+                <option value="Recurring">Recurring</option>
+            </select><br>
+
+            <label for="alarmDirection">Direction:</label>
+            <select id="alarmDirection">
+                <option value="Rising">Rising</option>
+                <option value="Falling">Falling</option>
+                <option value="Both">Both</option>
+            </select><br>
+            
+            <button onclick="addAlarm()">Add Alarm</button>
+        </div>
+    </div>
+
+    
+    <div id="optionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOptionsModal()">&times;</span>
+            <h2>Options</h2>
+
+            <label for="soundSelect">Alarm Sound:</label>
+            <select id="soundSelect">
+                <option value="ping.mp3">ping.mp3</option>
+                <option value="cashing.mp3">cashing.mp3</option>
+            </select>
+            <br><br>
+
+            <input type="checkbox" id="darkModeToggle">
+            <label for="darkModeToggle">Enable Dark Mode</label>
+            <br><br>
+
+            <input type="checkbox" id="desktopNotifyToggle">
+            <label for="desktopNotifyToggle">Enable Desktop Notifications</label>
+            <br><br>
+
+            <button onclick="openApiModal()">ADD/Edit OKX API</button>
+            <br><br>
+
+            <button onclick="saveOptions()">Save</button>
+        </div>
+    </div>
+
+    
+    <div id="apiModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeApiModal()">&times;</span>
+            <h2>OKX API Settings</h2>
+            <p>Enter your OKX API data here (optional). Primary is Binance.  
+               If Binance fails, the site tries OKX (or if you force OKX).</p>
+
+            <label for="okxApiKey">OKX API-Key:</label><br>
+            <input type="text" id="okxApiKey" placeholder="e.g. c42166aa-...">
+            <br>
+
+            <label for="okxSecretKey">OKX Secret-Key:</label><br>
+            <input type="text" id="okxSecretKey" placeholder="e.g. ACD0B07F...">
+            <br>
+
+            <label for="okxPassphrase">OKX Passphrase (if needed):</label><br>
+            <input type="text" id="okxPassphrase" placeholder="(optional)">
+            <br><br>
+
+            <button onclick="saveApiSettings()">Save</button>
+        </div>
+    </div>
+
+   
+    <div id="addCryptoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddCryptoModal()">&times;</span>
+            <h2>Add a New Cryptocurrency</h2>
+            <label for="newCryptoSymbol">Symbol (e.g. ETH):</label>
+            <input type="text" id="newCryptoSymbol" placeholder="BTC, ETH, ADA..."><br>
+            <br><br>
+            <button onclick="addNewCrypto()">Add</button>
+        </div>
+    </div>
+
+    
+    <div id="apiSelectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeApiSelectModal()">&times;</span>
+            <h2>API Selection for <span id="apiSelectSymbol"></span></h2>
+            <label for="apiSelectDropdown">Please choose:</label>
+            <select id="apiSelectDropdown">
+                <option value="auto">Auto (Binance -> OKX fallback)</option>
+                <option value="binance">Force Binance</option>
+                <option value="okx">Force OKX</option>
+            </select>
+            <br><br>
+            <button onclick="saveApiSelection()">Save</button>
+        </div>
+    </div>
+
+    
+    <div id="buyMeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBuyMeModal()">&times;</span>
+            <h2>Buy me a Coffee</h2>
+            <p><strong>Send me:</strong> USDT / Ethereum</p>
+            <p><strong>Chain:</strong> 
+                <span style="text-decoration: underline; cursor: pointer;"
+                      onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')">
+                    ETH
+                </span> / 
+                <span style="text-decoration: underline; cursor: pointer;"
+                      onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')">
+                    BSC
+                </span>
+            </p>
+            <p>
+                <span style="text-decoration: underline; cursor: pointer;"
+                      onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')">
+                    0x26c2E3F6C854Af006520ec2ce433982866bB7632
+                </span>
+            </p>
+            <p>(When clicked, the address is copied to the clipboard.)</p>
+        </div>
+    </div>
+
+    
+    <div id="alarmOverlay" class="alert-overlay">
+        <div class="alert-box">
+            <div id="alarmMessage"></div>
+            <button onclick="closeAlarmPopup()">Close</button>
+        </div>
+    </div>
+
+    
+    <div id="errorOverlay" class="error-overlay">
+        <div class="error-box">
+            <p id="errorMessage"></p>
+            <button onclick="closeErrorPopup()">Ok</button>
+        </div>
+    </div>
+
+    
+    <audio id="alarmSound">
+        <source src="sound/ping.mp3" type="audio/mpeg">
+    </audio>
+
+    
+    <div id="cryptoNewsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeCryptoNewsModal()">&times;</span>
+        <h2>Crypto News</h2>
+        
+        <input type="text" id="search" placeholder="Suche nach Artikeln...">
+        <div id="news-feed">Lade News...</div>
+      </div>
+    </div>
+
+    
+    <div id="economicCalendarModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEconomicCalendarModal()">&times;</span>
+        <h2>Economic Calendar</h2>
+        <div class="iframe-container">
+            <div class="iframe-wrapper">
+                <iframe 
+                src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5&calType=week&timeZone=8&lang=1"
+                allowtransparency="true">
+            </iframe>
+            </div>
+            <div class="poweredBy">
+                <span>Real Time Economic Calendar provided by 
+                    <a href="https://www.investing.com/" rel="nofollow" target="_blank" class="underline_link">Investing.com</a>.
+                </span>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="magic.js"></script>
+    
+    <script src="news.js"></script>
+</body>
+</html>

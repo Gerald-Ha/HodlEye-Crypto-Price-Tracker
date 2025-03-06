@@ -1,0 +1,62 @@
+MIT License
+
+Copyright (c) 2025 Gerald-H
+
+
+
+## Custom Non-Commercial License (Version 1.0)
+
+Copyright (C) 2025 [Gerald Hasani]
+
+1. Scope of Use
+   1.1 The Software (including source code, documentation, and related files, hereinafter 
+       referred to as “Software”) is provided free of charge for private, non-commercial 
+       use only.
+   1.2 Commercial use of the Software or integration of the Software into services or 
+       products intended for financial gain is strictly reserved for the original author 
+       (rights holder). Any commercial use by third parties is prohibited unless expressly 
+       authorized in writing by the author.
+
+2. Immutable Elements
+   2.1 The “Buy me a Coffee” button (including its underlying crypto address) and the 
+       “Developer” button must remain intact and unmodified.
+   2.2 It is strictly forbidden to remove, rename, conceal, or alter these buttons or 
+       replace the crypto address used in the “Buy me a Coffee” button with another 
+       address.
+   2.3 These restrictions also apply to any derivative works that incorporate or adapt 
+       any part of the Software’s source code.
+
+3. Preservation of License Text and Copyright
+   3.1 Any person who redistributes or modifies the Software, in whole or in part, must 
+       include this license text in its entirety, without alteration, and must retain 
+       all existing copyright notices.
+   3.2 Modified versions or derivative works must include a notice indicating that they 
+       are based on or derived from this original Software.
+
+4. Disclaimer of Warranty
+   THE SOFTWARE IS PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR 
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
+   FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE 
+   LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+   TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE 
+   USE OR OTHER DEALINGS IN THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
+
+5. Severability
+   Should any provision of this License be or become invalid or unenforceable, in whole 
+   or in part, it shall not affect the validity or enforceability of the remaining 
+   provisions. Such a provision shall be replaced by one that best accomplishes the 
+   original intent and purpose of the invalid or unenforceable provision.
+
+(End of License Terms)
+```
+
+**Note**: This license is **not** an OSI-approved open-source license. It restricts commercial usage by third parties and forbids altering certain UI elements (e.g., the “Buy me a Coffee” button). For legal certainty, please consult a lawyer.  
+
+If you find this project helpful, feel free to tip via the **Buy me a Coffee** button in the UI. Happy Hodling!
+```
+
+---
+
+**Additional Note**:  
+- The above License text forbids commercial usage by anyone other than the original author. It also specifically prohibits altering or removing the “Buy me a Coffee” and “Developer” buttons (including the crypto address).  
+- The **Privacy & Data Disclaimer** clarifies that no personal data is collected by HodlEye itself, but external sites (news feeds, iframes) may have their own practices.  
