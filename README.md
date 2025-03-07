@@ -250,6 +250,8 @@ Exciting new features and improvements are on the way! Here are some planned upd
 
 - **Portfolio Management**: Track your crypto holdings in real-time with easy-to-read analytics.  
 - **More Integrations**: Expanding support for additional exchanges and data sources.
+- **Automatic alarm in the event of a sharp price drop of 10% within 1 hour**
+- **HodlEye Notify Alarm with various sound selections and HodlEye Alarms**
 
 
 Stay tuned for updates!
