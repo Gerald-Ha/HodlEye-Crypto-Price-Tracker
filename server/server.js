@@ -52,7 +52,7 @@ function writeData(data) {
 
 
 app.get("/api/update", (req, res) => {
-  const remoteUpdateUrl = "https://raw.githubusercontent.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/refs/heads/master/update.json";
+  const remoteUpdateUrl = "https://raw.githubusercontent.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/refs/heads/main/update.json";
   fetch(remoteUpdateUrl)
     .then(response => response.json())
     .then(data => {
