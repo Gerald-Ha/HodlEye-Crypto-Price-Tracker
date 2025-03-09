@@ -1,14 +1,7 @@
 {
-  "version": "1.0.6",
+  "version": "1.0.7",
   "changelog": [
     "Bug fixes and improvements",
-    "Responsive design added",
-    "Crypto News Auto Update without Browser Refresh every 3 minutes",
-    "Crypto Price Refresh Reduce from 5 Second to 1 Second",
-    "Docker command updated to save alarms and registered cryptocurrencies that are still there after a Docker image update (--> docker run -p 3099:3099 -p 5001:5001 -v hodleye_data:/app/data --name hodleye-container hodleye-crypto-tracker)",
-    "Bugfix 'Edit List' works now",
-    "Added Update Option and Notification every 5 Days",
-    "Re-Design from Crypto-box",
-    "Improving the logic of the price display for small cryptocurrencies"
+    "News Feed Error Fix"
   ]
 }

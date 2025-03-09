@@ -1,4 +1,4 @@
-# HodlEye Crypto Price Tracker
+**Ubuntu**# HodlEye Crypto Price Tracker
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
@@ -184,21 +184,28 @@ Below is an example directory tree (based on your structure). Yours may vary sli
 ```
 HodlEye-Crypto-Price-Tracker
 ├── Dockerfile
+├── LICENSE.txt
+├── PRIVACY.md
+├── README.md
 ├── data
 │   └── data.json
 ├── public
 │   ├── font
 │   │   └── BreeSerif-Regular.ttf
 │   ├── images
+│   │   ├── Gitea_Logo.svg
 │   │   ├── coffee.svg
-│   │   └── favicon.png
+│   │   ├── favicon.png
+│   │   └── github-mark.svg
 │   ├── index.html
 │   ├── magic.js
 │   ├── news.js
+│   ├── responsive.css
 │   ├── sound
 │   │   ├── cashing.mp3
 │   │   └── ping.mp3
-│   └── style.css
+│   ├── style.css
+│   └── update.js
 ├── server
 │   ├── newsfeed
 │   │   ├── node_modules
@@ -209,9 +216,10 @@ HodlEye-Crypto-Price-Tracker
 │   ├── package-lock.json
 │   ├── package.json
 │   └── server.js
-└── sound
-    ├── cashing.mp3
-    └── ping.mp3
+├── sound
+│   ├── cashing.mp3
+│   └── ping.mp3
+└── update.json
 ```
 
 &nbsp;

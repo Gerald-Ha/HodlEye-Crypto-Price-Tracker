@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const apiUrl = "http://localhost:5001/api/news"; 
+    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":5001/api/news"; 
     const newsFeed = document.getElementById("news-feed");
     const searchInput = document.getElementById("search");
     let allArticles = [];
