@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.6",
   "changelog": "Bugfixes und Verbesserungen1234\n- Responsive design added\n- Crypto News Auto Update without Browser Refresh every 3 minutes\n- Crypto Price Refresh Reduce from 5 Second to 1 Second\n- Docker command updated to save alarms and registered cryptocurrencies that are still there after a Docker image update\n  --> docker run -p 3099:3099 -p 5001:5001 -v hodleye_data:/app/data --name hodleye-container hodleye-crypto-tracker\n- Bugfix 'Edit List' works now\n- Added Update Notification every 5 Days\n- Re-Design from Crypto-box\n- Improving the logic of the price display for small cryptocurrencies",
   "updateUrl": "https://github.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/"
 }
