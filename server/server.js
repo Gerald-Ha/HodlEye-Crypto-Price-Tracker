@@ -5,6 +5,7 @@ const cors = require("cors");
 const http = require("http");
 const WebSocket = require("ws");
 
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -16,7 +17,7 @@ const clients = new Set();
 
 /*
  * Metadata
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author/Dev: Gerald Hasani
  * Name: HodlEye Crypto Price Tracker
  * Email: contact@gerald-hasani.com
@@ -25,12 +26,20 @@ const clients = new Set();
 
 const DATA_FILE = path.join(__dirname, "..", "data", "data.json");
 
+
 if (!fs.existsSync(DATA_FILE)) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify({
-    cryptos: ["BTC"], 
-    alarms: [],
-    notifications: []
-  }, null, 2));
+  fs.writeFileSync(
+    DATA_FILE,
+    JSON.stringify(
+      {
+        cryptos: ["BTC"],
+        alarms: [],
+        notifications: []
+      },
+      null,
+      2
+    )
+  );
 }
 
 function readData() {
@@ -40,6 +49,23 @@ function readData() {
 function writeData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
+
+
+app.get("/api/update", (req, res) => {
+  const remoteUpdateUrl = "https://raw.githubusercontent.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/refs/heads/master/update.json";
+  fetch(remoteUpdateUrl)
+    .then(response => response.json())
+    .then(data => {
+      res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.header("Pragma", "no-cache");
+      res.header("Expires", "0");
+      res.json(data);
+    })
+    .catch(error => {
+      console.error("Fehler beim Abrufen der remote update.json:", error);
+      res.status(500).json({ error: "Could not fetch update data" });
+    });
+});
 
 app.get("/api/cryptos", (req, res) => {
   const data = readData();
@@ -51,10 +77,8 @@ app.post("/api/cryptos", (req, res) => {
   if (!symbol) {
     return res.status(400).json({ error: "Symbol is required." });
   }
-
   const data = readData();
   const upperSymbol = symbol.toUpperCase();
-
   if (!data.cryptos.includes(upperSymbol)) {
     data.cryptos.push(upperSymbol);
     writeData(data);
@@ -70,6 +94,17 @@ app.delete("/api/cryptos/:symbol", (req, res) => {
   res.json({ success: true, cryptos: data.cryptos });
 });
 
+app.put("/api/cryptos", (req, res) => {
+  const { cryptoList } = req.body;
+  if (!Array.isArray(cryptoList)) {
+    return res.status(400).json({ error: "cryptoList must be an array." });
+  }
+  const data = readData();
+  data.cryptos = cryptoList;
+  writeData(data);
+  res.json({ success: true, cryptos: data.cryptos });
+});
+
 app.get("/api/alarms", (req, res) => {
   const data = readData();
   res.json(data.alarms);
@@ -80,7 +115,6 @@ app.post("/api/alarms", (req, res) => {
   if (!symbol || !price) {
     return res.status(400).json({ error: "symbol and price are required." });
   }
-
   const data = readData();
   const newAlarm = {
     id: Date.now(),
@@ -113,7 +147,6 @@ app.post("/api/notifications", (req, res) => {
   if (!message) {
     return res.status(400).json({ error: "message is required." });
   }
-
   const data = readData();
   const entry = {
     message,
@@ -122,7 +155,7 @@ app.post("/api/notifications", (req, res) => {
   data.notifications.unshift(entry);
   writeData(data);
 
-  // Nachricht an alle WebSocket-Clients senden
+
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(entry));
@@ -141,18 +174,15 @@ app.delete("/api/notifications", (req, res) => {
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-// WebSocket-Server für Echtzeitbenachrichtigungen
 wss.on("connection", (ws) => {
-    console.log("Client verbunden");
-    clients.add(ws);
-
-    ws.on("close", () => {
-        console.log("Client getrennt");
-        clients.delete(ws);
-    });
+  console.log("Client verbunden");
+  clients.add(ws);
+  ws.on("close", () => {
+    console.log("Client getrennt");
+    clients.delete(ws);
+  });
 });
 
-// Server starten
 const PORT = process.env.PORT || 3099;
 server.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);

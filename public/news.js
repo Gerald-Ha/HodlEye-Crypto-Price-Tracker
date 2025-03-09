@@ -4,17 +4,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search");
     let allArticles = [];
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            allArticles = data;
-            displayArticles(allArticles);
-        })
-        .catch(error => {
-            newsFeed.innerHTML = "Error loading the news.";
-            console.error("Error when retrieving the news:", error);
-        });
+    
+    function refreshNewsFeed() {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                allArticles = data;
+                displayArticles(allArticles);
+            })
+            .catch(error => {
+                newsFeed.innerHTML = "Error loading the news.";
+                console.error("Error when retrieving the news:", error);
+            });
+    }
 
+    
     function displayArticles(items) {
         newsFeed.innerHTML = ""; 
         items.forEach(item => {
@@ -30,11 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </div>
             `;
-
             newsFeed.appendChild(newsItem);
         });
     }
 
+    
     searchInput.addEventListener("input", function () {
         const searchTerm = searchInput.value.toLowerCase();
         const filteredArticles = allArticles.filter(item =>
@@ -44,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         displayArticles(filteredArticles);
     });
 
+    
     function getTimeAgo(date) {
         const now = new Date();
         const seconds = Math.floor((now - new Date(date)) / 1000);
@@ -59,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `vor ${Math.floor(days / 365)} Jahren`;
     }
 
+    
     function formatSourceName(source) {
         const sourceMap = {
             "crypto_news": "Crypto News",
@@ -70,4 +76,8 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         return sourceMap[source] || source;
     }
+
+    
+    refreshNewsFeed();
+    setInterval(refreshNewsFeed, 180000);
 });
