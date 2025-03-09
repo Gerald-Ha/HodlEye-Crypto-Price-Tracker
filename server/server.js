@@ -54,17 +54,13 @@ function writeData(data) {
 app.get("/api/update", (req, res) => {
   const remoteUpdateUrl = "https://raw.githubusercontent.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/refs/heads/main/update.json";
   fetch(remoteUpdateUrl)
-.then(data => {
-  
-  if (data.changelog) {
-    data.changelog = data.changelog.replace(/\n/g, "<br>");
-  }
-
-  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.header("Pragma", "no-cache");
-  res.header("Expires", "0");
-  res.json(data);
-})
+    .then(response => response.json())
+    .then(data => {
+      res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.header("Pragma", "no-cache");
+      res.header("Expires", "0");
+      res.json(data);
+    })
     .catch(error => {
       console.error("Fehler beim Abrufen der remote update.json:", error);
       res.status(500).json({ error: "Could not fetch update data" });
