@@ -190,7 +190,7 @@ HodlEye-Crypto-Price-Tracker
 
 ## Important Notes / Limitations
 
-1. **5-second polling**  
+1. **1-second polling**  
    - There’s a potential delay in alarms because price thresholds are only checked every 5 seconds. If a price briefly touches and moves away between polls, you might miss that exact trigger moment.
 
 2. **API availability**  
