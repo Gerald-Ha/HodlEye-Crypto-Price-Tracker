@@ -101,8 +101,7 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 ### Tradingview Chart Window
 
 - The **Tradingview Chart Window** Function when clicking on one of the Crypto Boxes to get a better overview of the charts.
-
-<img src="https://github.com/user-attachments/assets/e254301e-9aaa-48d8-84e7-6faa598ca8be" width="600" height="auto">
+<img src="https://github.com/user-attachments/assets/53bd1553-7679-40c1-afa8-0330cd28a71b" width="600" height="auto">
 
 ---
 &nbsp;
