@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5001;
 
 /*
  * Metadata
- * Version: 1.0.4
+ * Version: 1.0.6
  * Author/Dev: Gerald Hasani
  * Name: HodlEye Crypto Price Tracker
  * Email: contact@gerald-hasani.com

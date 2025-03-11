@@ -1,4 +1,4 @@
-const CURRENT_VERSION = "1.0.7";
+const CURRENT_VERSION = "1.0.8";
 
 function getUpdateUrl() {
     return "/api/update?t=" + new Date().getTime();
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkForUpdates();
 
     
-    setInterval(checkForUpdates, 259200000);
+    setInterval(checkForUpdates, 86400000);
 });
 
 function checkForUpdates() {

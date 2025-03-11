@@ -17,6 +17,10 @@ let apiPreference = JSON.parse(localStorage.getItem("apiPreference")) || {};
 let editMode = false;
 let currentApiSelectSymbol = null;
 
+
+let exchangeUsedMap = {};  
+
+
 async function loadCryptosFromServer() {
     try {
         const resp = await fetch("/api/cryptos");
@@ -63,6 +67,7 @@ async function deleteCrypto(index) {
     }
 }
 
+
 async function loadAlarmsFromServer() {
     try {
         const resp = await fetch("/api/alarms");
@@ -102,6 +107,7 @@ async function deleteAlarm(alarmId) {
     }
 }
 
+
 async function loadNotificationsFromServer() {
     try {
         const resp = await fetch("/api/notifications");
@@ -134,6 +140,7 @@ async function clearNotifications() {
     }
 }
 
+
 async function init() {
     document.getElementById("alarmSound").src = "sound/" + userOptions.soundFile;
     updateTheme(userOptions.darkMode);
@@ -150,6 +157,7 @@ async function init() {
 
     renderNotifications();
 }
+
 
 function renderCryptoGrid() {
     const grid = document.getElementById("cryptoGrid");
@@ -200,6 +208,7 @@ function renderCryptoGrid() {
         box.appendChild(apiLabel);
 
         if (editMode) {
+            
             box.draggable = true;
             box.setAttribute("data-index", index);
 
@@ -217,6 +226,20 @@ function renderCryptoGrid() {
                 deleteCrypto(index);
             });
             box.appendChild(deleteBtn);
+        } else {
+           
+            box.addEventListener("click", (event) => {
+                
+                if (event.target.classList.contains("api-label") || event.target.closest(".api-label")) {
+                    
+                    return;
+                }
+            
+                
+                const usedExchange = exchangeUsedMap[symbol] || "BINANCE";
+                openTradingViewModal(usedExchange, symbol);
+            });
+            
         }
 
         grid.appendChild(box);
@@ -260,9 +283,7 @@ function renderNotifications() {
     });
 }
 
-/* ------------------------------------------------------------------
-   EINFACHE UI-Funktionen: Modal open/close
------------------------------------------------------------------- */
+
 function openAddCryptoModal() {
     document.getElementById("addCryptoModal").style.display = "block";
     document.getElementById("newCryptoSymbol").value = "";
@@ -332,9 +353,7 @@ function closeBuyMeModal() {
     document.getElementById("buyMeModal").style.display = "none";
 }
 
-/* ------------------------------------------------------------------
-   NEU: Crypto News & Economic Calendar Modals
------------------------------------------------------------------- */
+
 function openCryptoNews() {
     document.getElementById("cryptoNewsModal").style.display = "block";
 }
@@ -350,6 +369,7 @@ function openEconomicCalendar() {
 function closeEconomicCalendarModal() {
     document.getElementById("economicCalendarModal").style.display = "none";
 }
+
 
 function saveOptions() {
     userOptions.soundFile = document.getElementById("soundSelect").value;
@@ -396,9 +416,7 @@ function saveApiSelection() {
     closeApiSelectModal();
 }
 
-/* ------------------------------------------------------------------
-   EDIT MODE (Drag & Drop)
------------------------------------------------------------------- */
+
 function toggleEditMode() {
     editMode = !editMode;
     document.getElementById("editButton").textContent = editMode ? "Done" : "Edit List";
@@ -440,7 +458,6 @@ async function reorderCryptoList(fromIndex, toIndex) {
     cryptoList.splice(toIndex, 0, item);
 
     renderCryptoGrid();
-
     await saveCryptoList();
 }
 
@@ -455,6 +472,7 @@ async function saveCryptoList() {
         console.error("Fehler beim Speichern der Kryptoliste:", err);
     }
 }
+
 
 async function fetchCryptoData(symbol, elementId) {
     const preferredApi = apiPreference[symbol] || "auto";
@@ -474,6 +492,7 @@ async function fetchCryptoData(symbol, elementId) {
         }
     }
 
+    
     if (await isBinanceSupported(symbol)) {
         return fetchFromBinance(symbol, elementId);
     } else if (await isOkxSupported(symbol)) {
@@ -519,7 +538,7 @@ async function fetchFromBinance(symbol, elementId) {
     updateCryptoBox({
         symbol,
         elementId,
-        apiUsed: "Binance",
+        apiUsed: "BINANCE",
         dailyOpen,
         hourlyOpen,
         lastPrice,
@@ -545,6 +564,7 @@ async function fetchFromOkx(symbol, elementId) {
         pct24 = ((lastPrice - dailyOpen) / dailyOpen) * 100;
     }
 
+    
     const cUrl = `https://www.okx.com/api/v5/market/candles?instId=${instId}&bar=1H&limit=1`;
     let cResp = await fetch(cUrl);
     if (!cResp.ok) throw new Error("OKX 1h candle request failed");
@@ -581,7 +601,11 @@ function formatPrice(value) {
     }
 }
 
+
 function updateCryptoBox({symbol, elementId, apiUsed, dailyOpen, hourlyOpen, lastPrice, change24h, change1h}) {
+    
+    exchangeUsedMap[symbol] = apiUsed;
+
     const dOpenStr = formatPrice(dailyOpen);
     const hOpenStr = formatPrice(hourlyOpen);
     const lastStr = formatPrice(lastPrice);
@@ -590,9 +614,7 @@ function updateCryptoBox({symbol, elementId, apiUsed, dailyOpen, hourlyOpen, las
     const pct1hStr = isNaN(change1h) ? "-" : change1h.toFixed(2) + "%";
 
     document.getElementById("daily-" + elementId).innerHTML = `Daily Price:<br>${dOpenStr} USDT<br>`;
-
     document.getElementById("hourly-" + elementId).innerHTML = `Price H:<br>${hOpenStr} USDT<br>`;
-
     document.getElementById("price-" + elementId).innerHTML = `<strong>Current Price:</strong><br>${lastStr} USDT<br>`;
 
     const c24 = document.getElementById("change24-" + elementId);
@@ -605,9 +627,11 @@ function updateCryptoBox({symbol, elementId, apiUsed, dailyOpen, hourlyOpen, las
 
     document.getElementById("api-" + elementId).innerHTML = `API: ${apiUsed}`;
 
+   
     checkAlarms(symbol, lastPrice);
     lastPrices[symbol] = lastPrice;
 }
+
 
 function checkAlarms(symbol, currentPrice) {
     alarms.forEach((alarm) => {
@@ -638,6 +662,7 @@ function checkAlarms(symbol, currentPrice) {
         }
     });
 }
+
 
 function showErrorMessage(msg) {
     document.getElementById("errorMessage").textContent = msg;
@@ -670,17 +695,18 @@ function closeAlarmPopup() {
     document.getElementById("alarmOverlay").style.display = "none";
 }
 
+
 function copyToClipboard(address) {
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard
-        .writeText(address)
-        .then(() => {
-            alert("Address is copied to the clipboard.");
-        })
-        .catch((err) => {
-            console.error("Clipboard API Fehler:", err);
-            alert("Fehler beim Kopieren der Adresse.");
-        });
+            .writeText(address)
+            .then(() => {
+                alert("Address is copied to the clipboard.");
+            })
+            .catch((err) => {
+                console.error("Clipboard API Fehler:", err);
+                alert("Fehler beim Kopieren der Adresse.");
+            });
     } else {
         let textArea = document.createElement("textarea");
         textArea.value = address;
@@ -707,6 +733,10 @@ function copyToClipboard(address) {
         document.body.removeChild(textArea);
     }
 }
+
+
+window.addEventListener("DOMContentLoaded", init);
+
 
 async function isBinanceSupported(symbol) {
     const url = `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`;
