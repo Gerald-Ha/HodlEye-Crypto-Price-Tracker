@@ -44,7 +44,7 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
 - **Unlimited Crypto Tracking**: Easily add as many coins as you want.
 - **Real-Time Price Updates (every 1 seconds)**: Uses Binance and OKX data.
 - **Crypto News & Economic Calendar**: Stay updated on the latest events affecting the market.
-- **TradingView Modal Integration**: Click on any crypto pair to open a TradingView modal for in-depth chart analysis.**New**
+- **TradingView Modal Integration**: Click on any crypto pair to open a TradingView modal for in-depth chart analysis.
 
 The tool refreshes prices every **1 seconds**, which may introduce a slight delay in alarm triggers if the price quickly touches the threshold in between intervals.
 
