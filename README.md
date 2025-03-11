@@ -4,17 +4,13 @@ A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binanc
 
 <img src="https://github.com/user-attachments/assets/d87ca663-97be-4c22-a0ab-46505fe9c99f" width="800" height="auto">
 
----
-
-
-
-
-
 ## Demo
 
 Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
 
+
 ---
+
 
 ## Table of Contents
 
