@@ -21,6 +21,7 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
    - [Alarm Functionality](#alarm-functionality)
    - [Crypto News](#crypto-news)
    - [Economic Calendar](#economic-calendar)
+   - [TradingView Chart](#tradingview-chart)  
 3. [Installation & Usage](#installation--usage)
    - [Requirements](#requirements)
    - [Docker Build & Run](#docker-build--run)
@@ -104,9 +105,8 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 
 
 &nbsp;
-### Tradingview Chart Window
-
-- The **Tradingview Chart Window** Function when clicking on one of the Crypto Boxes to get a better overview of the charts.
+### TradingView Chart
+- The **TradingView Chart** Crypto Box Currency click opens a modal with a Tradingview Chart Window iframe, get a better overview of the charts.
 <img src="https://github.com/user-attachments/assets/53bd1553-7679-40c1-afa8-0330cd28a71b" width="600" height="auto">
 
 ---
@@ -214,6 +214,8 @@ HodlEye-Crypto-Price-Tracker
 │   ├── index.html
 │   ├── magic.js
 │   ├── news.js
+│   ├── tradingview.js
+│   ├── script.js
 │   ├── responsive.css
 │   ├── sound
 │   │   ├── cashing.mp3
