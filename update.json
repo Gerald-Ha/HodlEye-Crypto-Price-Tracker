@@ -1,7 +1,7 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "changelog": [
     "Bug fixes and improvements",
-    "News Feed Error Fix"
+    "Adding Tradingview chart display loaded when you click on the respective cryptocurrencies"
   ]
 }
