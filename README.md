@@ -2,7 +2,7 @@
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
-<img src="https://github.com/user-attachments/assets/d87ca663-97be-4c22-a0ab-46505fe9c99f" width="800" height="auto">
+<img src="https://github.com/user-attachments/assets/15c9227b-0683-4563-8b71-75f2f9ed475e" width="800" height="auto">
 
 ## Demo
 
@@ -11,8 +11,6 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
 **Default Login Data**  
 **User:** admin  
 **Password:** admin
-
-
 ---
 
 
@@ -28,6 +26,7 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
    - [TradingView Chart](#tradingview-chart)  
 3. [Installation & Usage](#installation--usage)
    - [Requirements](#requirements)
+   - [Environment variables (.env)](#environment-variables-env)
    - [Docker Build & Run](#docker-build--run)
 4. [Windows Notification App: HodlEye_Notify](#windows-notification-app-hodleye_notify)
 5. [Project Structure](#project-structure)
@@ -48,7 +47,7 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
 - **Unlimited Crypto Tracking**: Easily add as many coins as you want.
 - **Real-Time Price Updates (every 1 seconds)**: Uses Binance and OKX data.
 - **Crypto News & Economic Calendar**: Stay updated on the latest events affecting the market.
-- **TradingView Modal Integration**: Click on any crypto pair to open a TradingView modal for in-depth chart analysis.**New**
+- **TradingView Modal Integration**: Click on any crypto pair to open a TradingView modal for in-depth chart analysis.
 
 The tool refreshes prices every **1 seconds**, which may introduce a slight delay in alarm triggers if the price quickly touches the threshold in between intervals.
 
@@ -121,6 +120,24 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 
 - [Docker](https://www.docker.com/) installed.
 - (Optional) [Docker-Compose](https://docs.docker.com/compose/) if you want a more complex or multi-container setup.
+
+
+### Environment Variables (.env)
+
+You can store the username, password, and a secret key in the `.env` file to protect the application from unauthorized access. **Make sure to change the default credentials to your own secure values**:
+
+```
+LOGIN_USER=admin
+LOGIN_PASS=admin
+SESSION_SECRET=some_secret_key
+```
+
+- **LOGIN_USER**: The username for logging into the application.
+- **LOGIN_PASS**: The password for logging into the application.
+- **SESSION_SECRET**: A random, secret value to secure sessions.
+
+After building and starting the container, a login prompt will appear when accessing the application, ensuring that only authorized users can proceed.
+
 
 ### Docker Build & Run
 
@@ -239,7 +256,8 @@ HodlEye-Crypto-Price-Tracker
 ├── sound
 │   ├── cashing.mp3
 │   └── ping.mp3
-└── update.json
+├── update.json
+└── .env
 ```
 
 &nbsp;
