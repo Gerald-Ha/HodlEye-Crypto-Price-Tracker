@@ -2,7 +2,7 @@
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
-<img src="https://github.com/user-attachments/assets/d87ca663-97be-4c22-a0ab-46505fe9c99f" width="800" height="auto">
+<img src="https://github.com/user-attachments/assets/15c9227b-0683-4563-8b71-75f2f9ed475e" width="800" height="auto">
 
 ## Demo
 
