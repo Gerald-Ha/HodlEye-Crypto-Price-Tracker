@@ -4,11 +4,49 @@ const path = require("path");
 const cors = require("cors");
 const http = require("http");
 const WebSocket = require("ws");
-
+const session = require("express-session");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "geheim",
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use((req, res, next) => {
+  const publicPaths = ["/login", "/login.html"];
+  const staticFileExtensions = [".css", ".js", ".png", ".jpg", ".jpeg", ".svg"];
+  if (req.session.loggedIn || publicPaths.includes(req.path) || staticFileExtensions.some(ext => req.path.endsWith(ext))) {
+    return next();
+  }
+  res.redirect("/login");
+});
+
+app.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
+});
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.LOGIN_USER && password === process.env.LOGIN_PASS) {
+    req.session.loggedIn = true;
+    return res.redirect("/");
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+});
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -25,7 +63,6 @@ const clients = new Set();
  */
 
 const DATA_FILE = path.join(__dirname, "..", "data", "data.json");
-
 
 if (!fs.existsSync(DATA_FILE)) {
   fs.writeFileSync(
@@ -49,7 +86,6 @@ function readData() {
 function writeData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
-
 
 app.get("/api/update", (req, res) => {
   const remoteUpdateUrl = "https://raw.githubusercontent.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker/refs/heads/main/update.json";
@@ -154,14 +190,11 @@ app.post("/api/notifications", (req, res) => {
   };
   data.notifications.unshift(entry);
   writeData(data);
-
-
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(entry));
     }
   });
-
   res.json(entry);
 });
 

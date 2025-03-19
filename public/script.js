@@ -8,3 +8,16 @@ document.querySelectorAll('.modal').forEach(modal => {
     });
   });
   
+
+
+
+  function logout() {
+    fetch("/logout", {
+        method: "GET",
+        credentials: "same-origin"
+    }).then(response => {
+        if (response.redirected) {
+            window.location.href = response.url; // Leitet zur Login-Seite um
+        }
+    }).catch(error => console.error("Logout-Fehler:", error));
+}

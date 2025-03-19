@@ -2,18 +2,29 @@
     .grid-container {
         grid-template-columns: repeat(4, 1fr);
     }
+
 }
 
 @media (max-width: 1353px) {
     .grid-container {
         grid-template-columns: repeat(3, 1fr);
     }
+
 }
 
 @media (max-width: 1275px) {
     .grid-container {
         grid-template-columns: repeat(3, 1fr);
     }
+
+}
+
+@media (max-width: 1251px) {
+    .grid-right {
+        justify-content: center; 
+        max-width: 100%; 
+    }
+
 }
 
 @media (max-width: 1200px) {

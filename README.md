@@ -24,6 +24,7 @@ Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
    - [TradingView Chart](#tradingview-chart)  
 3. [Installation & Usage](#installation--usage)
    - [Requirements](#requirements)
+   - [Environment variables (.env)](#environment-variables-env)
    - [Docker Build & Run](#docker-build--run)
 4. [Windows Notification App: HodlEye_Notify](#windows-notification-app-hodleye_notify)
 5. [Project Structure](#project-structure)
@@ -118,6 +119,24 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 - [Docker](https://www.docker.com/) installed.
 - (Optional) [Docker-Compose](https://docs.docker.com/compose/) if you want a more complex or multi-container setup.
 
+
+### Environment Variables (.env)
+
+You can store the username, password, and a secret key in the `.env` file to protect the application from unauthorized access. **Make sure to change the default credentials to your own secure values**:
+
+```
+LOGIN_USER=admin
+LOGIN_PASS=admin
+SESSION_SECRET=some_secret_key
+```
+
+- **LOGIN_USER**: The username for logging into the application.
+- **LOGIN_PASS**: The password for logging into the application.
+- **SESSION_SECRET**: A random, secret value to secure sessions.
+
+After building and starting the container, a login prompt will appear when accessing the application, ensuring that only authorized users can proceed.
+
+
 ### Docker Build & Run
 
 1. **Clone this repository**
@@ -138,7 +157,7 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 3. **Run the container**
 
    ```bash
-   docker run -p 3099:3099 -p 5001:5001 -v hodleye_data:/app/data --name hodleye-container hodleye-crypto-tracker
+   docker run -p 3099:3099 -p 5001:5001 --env-file .env -v hodleye_data:/app/data --name hodleye-container hodleye-crypto-tracker
    ```
 
    - Port `3099` serves the main web interface.
@@ -235,7 +254,8 @@ HodlEye-Crypto-Price-Tracker
 ├── sound
 │   ├── cashing.mp3
 │   └── ping.mp3
-└── update.json
+├── update.json
+└── .env
 ```
 
 &nbsp;

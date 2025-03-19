@@ -86,6 +86,7 @@ button:hover {
 
 }
 
+
 .notify-area {
     min-height: 400px;
     max-width: 280px;
@@ -132,6 +133,17 @@ button:hover {
     margin: auto;
     padding: 10px;
 }
+
+.grid-right {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 420px; 
+    align-self: flex-end;
+}
+
+
+
 
 .crypto-box {
     background-color: #1e1e1e;
@@ -661,6 +673,7 @@ body.light .alarm-item {
 #tradingViewModal .modal-content {
     min-width: 80%;
     min-height: 80%;
+	max-height: 80%;
     text-align: center;
     position: fixed;
     top: 35%;
