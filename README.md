@@ -342,6 +342,7 @@ _(Within Docker, it’s already bundled, so just expose `5001`.)_
 - **Big Movement Alarm**: Alarm function for rapid short or long events.
 - **Android**: Android app with synchronization option to HodlEye Docker (First early alpha already available internally)
 - **HodlEye Notify Alarm with various sound selections and HodlEye Alarms**
+- **Windows HodlEye Notify Update**: Windows app bugfix and updates
 
 
 Stay tuned for updates!
