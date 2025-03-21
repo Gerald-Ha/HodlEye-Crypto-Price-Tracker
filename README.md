@@ -2,7 +2,7 @@
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
-<img src="https://github.com/user-attachments/assets/15c9227b-0683-4563-8b71-75f2f9ed475e" width="800" height="auto">
+<img src="https://github.com/user-attachments/assets/d87ca663-97be-4c22-a0ab-46505fe9c99f" width="800" height="auto">
 
 ## Demo
 
@@ -335,13 +335,12 @@ _(Within Docker, it’s already bundled, so just expose `5001`.)_
 ---
 
 &nbsp;
-## Coming Soon
+## Upcoming planned changes with the next versions
 
-Exciting new features and improvements are on the way! Here are some planned updates:
 
 - **Portfolio Management**: Track your crypto holdings in real-time with easy-to-read analytics.
-- **More Integrations**: Expanding support for additional exchanges and data sources.
-- **Automatic alarm in the event of a sharp price drop of 10% within 1 hour**
+- **Big Movement Alarm**: Alarm function for rapid short or long events.
+- **Android**: Android app with synchronization option to HodlEye Docker (First early alpha already available internally)
 - **HodlEye Notify Alarm with various sound selections and HodlEye Alarms**
 
 
@@ -358,9 +357,12 @@ Stay tuned for updates!
 - **External Services**: Certain features (e.g., news feeds, iframes) rely on third-party websites or APIs. We do not control and are not responsible for the data-collection practices or privacy policies of these external providers. Please refer to the privacy policies of those services for details.
 
 ---
+&nbsp;
 
+## 🛡️ License
+Custom Non-Commercial License. See `LICENSE` file for details.
 
-
+---
 
 
 &nbsp;
