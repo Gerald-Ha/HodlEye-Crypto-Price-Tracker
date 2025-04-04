@@ -1,4 +1,4 @@
-# HodlEye Crypto Price Tracker
+# HodlEye Crypto Portfolio & Price Tracker
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
