@@ -125,6 +125,11 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 
 ## Portfolio Management
 
+<img src="https://github.com/user-attachments/assets/afea1c01-2016-46b1-b800-bafbf6c43351" width="500" height="auto">
+<img src="https://github.com/user-attachments/assets/933ea5ad-d480-4bc8-b142-5c607eea956b" width="500" height="auto">
+
+&nbsp;
+
 HodlEye includes robust portfolio management features to help you monitor and analyze your cryptocurrency investments:
 
 - **Live Portfolio**:  
@@ -134,6 +139,7 @@ HodlEye includes robust portfolio management features to help you monitor and an
 - **Trade Summary**:  
   This section provides a comprehensive breakdown of your closed trades, showing the actual profits or losses realized upon selling your assets. It includes information like the coin symbol, amount, buy price, invested amount, sell price, profit, percentage profit, buy date, and sell date. A date filter is available to help you analyze trade performance over specific time ranges.  
   The bottom bar in the Trade Summary page displays the cumulative invested amount, overall profit/loss, and overall percentage change.
+  The charts in “Portfolio Live” are updated every 10 seconds
 
 These portfolio features enable you to have a clear, up-to-date overview of both your active and completed investments, empowering you to make informed trading decisions.
 
