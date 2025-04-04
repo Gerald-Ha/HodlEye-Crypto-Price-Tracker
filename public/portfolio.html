@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crypto Portfolio Tracker</title>
+  <link rel="stylesheet" href="css/portfolio.css" />
+  <script defer src="js/portfolio.js"></script>
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <title>Portfolio</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .content {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="content">
+      <div class="button-grid-container">
+        <div class="grid-left">
+          <button class="price-btn" onclick="window.location.href='index.html'">Price Tracker</button>
+        </div>
+        <div class="grid-middle">
+          <button>Live Portfolio</button>
+          <button onclick="openAddTransactionModal()">Add Transaction</button>
+          <button onclick="window.location.href='trade_summary.html'">Trade Summary</button>
+        </div>
+        <div class="grid-right">
+          <button onclick="window.location.href='/logout'">Logout</button>
+        </div>
+      </div>
+
+      <h1>Crypto Portfolio</h1>
+
+      <div class="portfolio-container" id="portfolioList"></div>
+
+      <div class="chart-and-legend-container">
+        <canvas id="portfolioPieChart" width="400" height="400" onclick="openColorConfigModal()"></canvas>
+        <div id="chartLegend"></div>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-bar-item">
+        Invest: <span id="totalInvest">0 USDT</span>
+      </div>
+      <div class="bottom-bar-item">
+        Total Profit/Loss: <span id="totalProfitLoss">0 USDT</span>
+      </div>
+      <div class="bottom-bar-item">
+        % Change: <span id="totalPercentChange">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="addTransactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAddTransactionModal()">&times;</span>
+      <h2>Add Transaction</h2>
+      <div class="transaction-type-buttons">
+        <button onclick="showBuyForm()">Buy</button>
+        <button onclick="showSellForm()">Sell</button>
+      </div>
+      
+      <div id="buyForm" class="transaction-form" style="display: none;">
+        <div class="form-row">
+          <label for="buySymbol">Symbol:</label>
+          <input type="text" id="buySymbol" placeholder="BTC" />
+        </div>
+        <div class="form-row">
+          <label for="buyAmount">Amount:</label>
+          <input type="number" step="0.000001" id="buyAmount" placeholder="0.4" />
+        </div>
+        <div class="form-row">
+          <label for="buyPrice">Buy Price (USDT):</label>
+          <input type="number" step="0.01" id="buyPrice" placeholder="30000" />
+        </div>
+        <div class="form-row">
+          <label for="buyDate">Buy Date:</label>
+          <input type="date" id="buyDate" />
+        </div>
+        <div class="buy-confirm-buttons">
+          <button onclick="confirmBuy()">Confirm purchase</button>
+        </div>
+      </div>
+      
+      <div id="sellForm" class="transaction-form" style="display: none;">
+        <div class="form-row">
+          <label for="sellSelectTransaction">Existing transaction:</label>
+          <select id="sellSelectTransaction"></select>
+        </div>
+        <div class="form-row">
+          <label for="sellAmount">Amount:</label>
+          <input type="number" step="0.000001" id="sellAmount" placeholder="0.2" />
+        </div>
+        <div class="form-row">
+          <label for="sellPrice">Sell Price (USDT):</label>
+          <input type="number" step="0.01" id="sellPrice" placeholder="32000" />
+        </div>
+        <div class="form-row">
+          <label for="sellDate">Sell Date:</label>
+          <input type="date" id="sellDate" />
+        </div>
+        <div class="buy-confirm-buttons">
+          <button onclick="confirmSell()">Confirm sale</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editTransactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditTransactionModal()">&times;</span>
+      <h2>Edit / Delete Transaction</h2>
+      <label for="editSymbol">Symbol:</label>
+      <input type="text" id="editSymbol" disabled />
+      <label for="editAmount">Amount:</label>
+      <input type="number" step="0.000001" id="editAmount" />
+      <label for="editBuyPrice">Buy Price (USDT):</label>
+      <input type="number" step="0.01" id="editBuyPrice" />
+      <label for="editDate">Date:</label>
+      <input type="date" id="editDate" />
+      <div class="edit-buttons">
+        <button onclick="saveEditedTransaction()">Save</button>
+        <button onclick="deleteTransaction()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="colorConfigModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeColorConfigModal()">&times;</span>
+      <h2>Diagram colors</h2>
+      <div id="colorConfigList"></div>
+      <button onclick="saveColorConfig()">OK</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HodlEye Crypto Price Tracker</title>
 
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="responsive.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
     <link rel="icon" type="image/png" href="images/favicon.png" />
   </head>
   <body class="dark">
+    
     <div class="header">
       <h1>HodlEye Crypto Price Tracker</h1>
       <div class="button-grid-container">
@@ -21,12 +22,14 @@
           <button onclick="openAddCryptoModal()">Add Crypto</button>
           <button onclick="toggleEditMode()" id="editButton">Edit List</button>
           <button class="alarm-btn" onclick="openAlarmModal()">Alarms</button>
+          <button class="portfolio-btn" onclick="window.location.href='portfolio.html'">Portfolio</button>
+
+        </div>
+        
+        <div class="grid-right">
           <button class="options-btn" onclick="openOptionsModal()">
             Options
           </button>
-        </div>
-        <div class="grid-right">
-
           <button onclick="logout()">Logout</button>
         </div>
       </div>
@@ -65,7 +68,7 @@
           </button>
 
           <div class="version-info">
-            <span id="currentVersion">Version 1.0.9</span>
+            <span id="currentVersion">Version 1.5.0</span>
             <span
               id="updateAvailable"
               style="display: none; color: red; cursor: pointer"
@@ -81,29 +84,34 @@
       <div class="modal-content">
         <span class="close" onclick="closeAlarmModal()">&times;</span>
         <h2>Price Alarms</h2>
-
         <div class="alarm-list-container" id="alarmListContainer"></div>
-
-        <label for="alarmSymbol">Symbol:</label>
-        <select id="alarmSymbol"></select
-        ><br />
-
-        <label for="alarmPrice">Alarm Price (USDT):</label>
-        <input type="number" id="alarmPrice" placeholder="Price" /><br />
-
-        <label for="alarmFrequency">Frequency:</label>
-        <select id="alarmFrequency">
-          <option value="Once">Once</option>
-          <option value="Recurring">Recurring</option></select
-        ><br />
-
-        <label for="alarmDirection">Direction:</label>
-        <select id="alarmDirection">
-          <option value="Rising">Rising</option>
-          <option value="Falling">Falling</option>
-          <option value="Both">Both</option></select
-        ><br />
-
+        <div class="alarm-row">
+          <div class="alarm-col">
+            <label for="alarmSymbol">Symbol:</label>
+            <select id="alarmSymbol"></select>
+          </div>
+          <div class="alarm-col">
+            <label for="alarmPrice">Alarm Price (USDT):</label>
+            <input type="number" id="alarmPrice" placeholder="Price" />
+          </div>
+        </div>
+        <div class="alarm-row">
+          <div class="alarm-col">
+            <label for="alarmFrequency">Frequency:</label>
+            <select id="alarmFrequency">
+              <option value="Once">Once</option>
+              <option value="Recurring">Recurring</option>
+            </select>
+          </div>
+          <div class="alarm-col">
+            <label for="alarmDirection">Direction:</label>
+            <select id="alarmDirection">
+              <option value="Rising">Rising</option>
+              <option value="Falling">Falling</option>
+              <option value="Both">Both</option>
+            </select>
+          </div>
+        </div>
         <button onclick="addAlarm()">Add Alarm</button>
       </div>
     </div>
@@ -299,12 +307,13 @@
       </div>
     </div>
 
-    <script src="magic.js"></script>
-    <script src="news.js"></script>
-    <script src="update.js"></script>
-    <script src="tradingview.js"></script>
-    <script src="script.js"></script>
+    <script src="js/magic.js"></script>
+    <script src="js/news.js"></script>
+    <script src="js/update.js"></script>
+    <script src="js/tradingview.js"></script>
+    <script src="js/script.js"></script>
 
-
+  
   </body>
+
 </html>

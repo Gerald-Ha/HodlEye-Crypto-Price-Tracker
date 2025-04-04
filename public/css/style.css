@@ -27,6 +27,7 @@ body.light {
 .header {
     text-align: center;
     padding: 20px;
+    max-width: 1660px;
 }
 
 .button-container {
@@ -68,6 +69,7 @@ button:hover {
 
 .main-container {
     display: flex;
+
 }
 
 .left-column {
@@ -134,13 +136,7 @@ button:hover {
     padding: 10px;
 }
 
-.grid-right {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    max-width: 420px; 
-    align-self: flex-end;
-}
+
 
 
 
@@ -319,7 +315,7 @@ body.light .crypto-box {
     top: 35%;
     left: 50%;
     transform: translate(-50%, -45%);
-    display: flex;
+
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -458,9 +454,9 @@ body.light .api-label {
 
 .alarm-list-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 2fr);
     gap: 10px;
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
     margin: 1em 0;
 }
@@ -582,16 +578,6 @@ body.light .alarm-item {
 }
 
 
-.button-grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    /* alle gleich breit */
-    align-items: center;
-    justify-items: center;
-    column-gap: 10px;
-    /* oder kleiner */
-    margin-bottom: 15px;
-}
 
 
 #economicCalendarModal .iframe-container {
@@ -673,7 +659,7 @@ body.light .alarm-item {
 #tradingViewModal .modal-content {
     min-width: 80%;
     min-height: 80%;
-	max-height: 80%;
+    max-height: 80%;
     text-align: center;
     position: fixed;
     top: 35%;
@@ -697,4 +683,64 @@ body.light .alarm-item {
     font-size: 24px;
     cursor: pointer;
     color: red;
+}
+
+
+.button-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    align-items: center;
+    justify-items: center;
+    column-gap: 10px;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+
+
+
+
+
+.grid-right {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+
+    align-items: start;
+    justify-items: stretch;
+    justify-content: flex-end;
+}
+
+
+.header-container {
+    max-width: 170px;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+
+.alarm-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.alarm-col {
+    flex: 1;
+}
+
+
+#alarmModal .modal-content .alarm-row select,
+#alarmModal .modal-content .alarm-row input {
+    margin-bottom: 8px;
+    width: 200px;
+    padding: 8px;
+}
+
+#alarmModal .modal-content button:last-child {
+    margin-top: 20px;
 }

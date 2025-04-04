@@ -1,0 +1,207 @@
+.button-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  background: #1e1e1e;
+  padding: 1rem;
+}
+.grid-left,
+.grid-middle,
+.grid-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 808px;
+}
+h1 {
+  text-align: center;
+  margin-top: 1rem;
+  padding-bottom: 20px;
+}
+button {
+  background: #333;
+  color: #e0e0e0;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #005f73;
+}
+.portfolio-container {
+  max-width: 1100px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  
+}
+.coin-section {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+.coin-section h2 {
+  margin-top: 0;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+.summary-row {
+  background-color: #2b2b2b;
+  font-weight: bold;
+}
+.positive {
+  color: #4caf50;
+}
+.negative {
+  color: #f44336;
+}
+.chart-and-legend-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+#chartLegend {
+  min-width: 120px;
+}
+.legend-color-box {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+.bottom-bar {
+  display: flex;
+  justify-content: center;
+  
+  background: #1e1e1e;
+  padding: 1rem;
+  margin-top: 7rem;
+}
+.bottom-bar-item {
+  display: flex;             
+  align-items: center;  
+  margin: 0 2rem;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+.modal-content {
+  background-color: #1e1e1e;
+  margin: 10% auto;
+  padding: 1rem;
+  border: 1px solid #333;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 4px;
+  position: relative;
+}
+.modal-content h2 {
+  margin-top: 0;
+}
+.close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  color: #ccc;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.close:hover {
+  color: #fff;
+}
+.transaction-type-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.transaction-form label {
+  margin-top: 0.5rem;
+}
+.edit-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+.edit-button {
+  margin-left: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.buy-confirm-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+
+button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+
+}
+
+
+
+
+.price-btn {
+  background-color: #ff8b00;
+}
+
+.price-btn:hover {
+  background-color: #e38806;
+}
+
+

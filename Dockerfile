@@ -5,8 +5,7 @@ WORKDIR /app
 COPY server/package*.json ./server/
 COPY server/newsfeed/package*.json ./server/newsfeed/
 
-RUN cd server && npm install && npm install ws
-
+RUN cd server && npm install && npm install ws && npm install node-fetch@2
 RUN cd server/newsfeed && npm install
 
 COPY . /app

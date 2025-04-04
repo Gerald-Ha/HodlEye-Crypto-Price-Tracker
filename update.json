@@ -1,7 +1,8 @@
 {
-  "version": "1.0.9",
+  "version": "1.5.0",
   "changelog": [
-    "Bug fixes and improvements",
-    "Adding Login Display"
+    "Adding Portfolio Page",
+    "Fixing Alarm Layout with Category",
+    "Automatically delete alarms that have expired"
   ]
 }

@@ -85,7 +85,10 @@ async function addAlarm() {
     const direction = document.getElementById("alarmDirection").value;
 
     if (!symbol || isNaN(price)) return;
-
+    if (alarms.some(a => a.symbol === symbol && parseFloat(a.price) === price)) {
+        showErrorMessage("Alarm for this symbol and price already exists.");
+        return;
+    }
     try {
         await fetch("/api/alarms", {
             method: "POST",
@@ -250,22 +253,30 @@ function renderCryptoGrid() {
 function renderAlarmList() {
     const container = document.getElementById("alarmListContainer");
     container.innerHTML = "";
-
+    let grouped = {};
     alarms.forEach((alarm) => {
-        const item = document.createElement("div");
-        item.className = "alarm-item";
-
-        const textSpan = document.createElement("span");
-        textSpan.innerText = `${alarm.symbol}: ${alarm.price} (${alarm.frequency}, ${alarm.direction})`;
-        item.appendChild(textSpan);
-
-        const delBtn = document.createElement("button");
-        delBtn.innerHTML = "🗑";
-        delBtn.className = "alarm-delete-btn";
-        delBtn.onclick = () => deleteAlarm(alarm.id);
-
-        item.appendChild(delBtn);
-        container.appendChild(item);
+        if (!grouped[alarm.symbol]) {
+            grouped[alarm.symbol] = [];
+        }
+        grouped[alarm.symbol].push(alarm);
+    });
+    Object.keys(grouped).forEach((symbol) => {
+        const groupHeader = document.createElement("h3");
+        groupHeader.textContent = symbol;
+        container.appendChild(groupHeader);
+        grouped[symbol].forEach((alarm) => {
+            const item = document.createElement("div");
+            item.className = "alarm-item";
+            const textSpan = document.createElement("span");
+            textSpan.innerText = `${alarm.price} (${alarm.frequency}, ${alarm.direction})`;
+            item.appendChild(textSpan);
+            const delBtn = document.createElement("button");
+            delBtn.innerHTML = "🗑";
+            delBtn.className = "alarm-delete-btn";
+            delBtn.onclick = () => deleteAlarm(alarm.id);
+            item.appendChild(delBtn);
+            container.appendChild(item);
+        });
     });
 }
 
@@ -657,6 +668,8 @@ function checkAlarms(symbol, currentPrice) {
             const msg = `⚠️ ALARM (${alarm.frequency}, ${alarm.direction}): ${symbol} reached ${alarmPrice}!`;
             showAlarmPopup(msg);
             if (alarm.frequency === "Once") {
+                deleteAlarm(alarm.id);
+            } else {
                 alarm.triggered = true;
             }
         }
