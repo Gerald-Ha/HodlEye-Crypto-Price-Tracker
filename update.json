@@ -1,8 +1,8 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "changelog": [
-    "Adding Portfolio Page",
-    "Fixing Alarm Layout with Category",
-    "Automatically delete alarms that have expired"
+    "Adding Note Option in Portfolio Page",
+    "Fixing Editing Option in Trade Summary"
+    
   ]
 }

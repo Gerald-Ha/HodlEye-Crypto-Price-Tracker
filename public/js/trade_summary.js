@@ -1,6 +1,13 @@
-let allTrades = []; 
+let allTrades = [];
+let editTradeId = null;
+let currentNoteId = null;
+let currentNoteType = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  noteModal = document.getElementById("noteModal");
+  window.addEventListener("click", (event) => {
+    if (event.target === noteModal) closeNoteModal();
+  });
   loadTradeSummary();
 });
 
@@ -65,6 +72,9 @@ function renderTradeSummary(trades) {
       let row = document.createElement("tr");
       let profitClass = trade.profit >= 0 ? "positive" : "negative";
       let invest = trade.buyPrice * trade.amount;
+      const editButton = `<span class="edit-button" onclick="openEditTradeModal('${trade.id}')">✎</span>`;
+      const noteButton = `<span class="note-button ${trade.note ? 'has-note' : 'no-note'}" onclick="openNoteModal('${trade.id}', 'trade')">✉</span>`;
+      
       row.innerHTML = `
         <td>${trade.symbol}</td>
         <td>${trade.amount}</td>
@@ -74,7 +84,7 @@ function renderTradeSummary(trades) {
         <td class="${profitClass}">${trade.profit.toFixed(2)}</td>
         <td class="${profitClass}">${trade.percentProfit.toFixed(2)}%</td>
         <td>${trade.buyDate}</td>
-        <td>${trade.sellDate}</td>
+        <td>${trade.sellDate}${editButton}${noteButton}</td>
       `;
       tbody.appendChild(row);
 
@@ -131,6 +141,142 @@ function updateBottomBar(trades) {
   document.getElementById("totalTradeProfit").textContent = totalProfit.toFixed(2) + " USDT";
   document.getElementById("totalTradePercentChange").textContent = pctChange.toFixed(2) + "%";
 }
+
+
+function openNoteModal(id, type) {
+  currentNoteId = id;
+  currentNoteType = type;
+  document.getElementById("noteModal").style.display = "block";
+  
+  const trade = allTrades.find(x => String(x.id) === String(id));
+  document.getElementById("noteText").value = trade?.note || "";
+}
+
+function closeNoteModal() {
+  document.getElementById("noteModal").style.display = "none";
+}
+
+function saveNote() {
+  const noteText = document.getElementById("noteText").value;
+  
+  fetch("/api/trade_summary/note", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      id: currentNoteId, 
+      note: noteText 
+    }),
+    credentials: "include"
+  })
+  .then(r => r.json())
+  .then(j => {
+    if (j.error) {
+      alert(j.error);
+    } else {
+      closeNoteModal();
+      loadTradeSummary();
+    }
+  })
+  .catch(() => alert("Error saving note"));
+}
+
+
+function openEditTradeModal(id) {
+  editTradeId = id;
+  const trade = allTrades.find(t => String(t.id) === String(id));
+  if (!trade) {
+    alert("Invalid trade");
+    return;
+  }
+  
+  document.getElementById("editTradeAmount").value = trade.amount;
+  document.getElementById("editTradeBuyPrice").value = trade.buyPrice;
+  document.getElementById("editTradeSellPrice").value = trade.sellPrice;
+  document.getElementById("editTradeBuyDate").value = trade.buyDate;
+  document.getElementById("editTradeSellDate").value = trade.sellDate;
+  
+  document.getElementById("editTradeModal").style.display = "block";
+}
+
+function closeEditTradeModal() {
+  document.getElementById("editTradeModal").style.display = "none";
+}
+
+function saveEditedTrade() {
+  const trade = allTrades.find(t => String(t.id) === String(editTradeId));
+  if (!trade) {
+    alert("Invalid trade");
+    return;
+  }
+  
+  const amount = parseFloat(document.getElementById("editTradeAmount").value);
+  const buyPrice = parseFloat(document.getElementById("editTradeBuyPrice").value);
+  const sellPrice = parseFloat(document.getElementById("editTradeSellPrice").value);
+  const buyDate = document.getElementById("editTradeBuyDate").value;
+  const sellDate = document.getElementById("editTradeSellDate").value;
+  
+  if (isNaN(amount) || isNaN(buyPrice) || isNaN(sellPrice)) {
+    alert("Please enter valid values");
+    return;
+  }
+  
+  fetch("/api/trade_summary/edit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: editTradeId,
+      amount,
+      buyPrice,
+      sellPrice,
+      buyDate,
+      sellDate
+    }),
+    credentials: "include"
+  })
+  .then(r => r.json())
+  .then(j => {
+    if (j.error) {
+      alert(j.error);
+    } else {
+      closeEditTradeModal();
+      loadTradeSummary();
+    }
+  })
+  .catch(() => alert("Error saving trade"));
+}
+
+function deleteTrade() {
+  openDeleteTradeConfirmationModal();
+}
+
+function openDeleteTradeConfirmationModal() {
+  document.getElementById("deleteTradeConfirmationModal").style.display = "block";
+}
+
+function closeDeleteTradeConfirmationModal() {
+  document.getElementById("deleteTradeConfirmationModal").style.display = "none";
+}
+
+function confirmDeleteTrade() {
+  fetch("/api/trade_summary/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: editTradeId }),
+    credentials: "include"
+  })
+  .then(r => r.json())
+  .then(j => {
+    if (j.error) {
+      alert(j.error);
+    } else {
+      closeDeleteTradeConfirmationModal();
+      closeEditTradeModal();
+      loadTradeSummary();
+    }
+  })
+  .catch(() => alert("Error deleting trade"));
+}
+
 
 function openDateFilterModal() {
   document.getElementById("dateFilterModal").style.display = "block";

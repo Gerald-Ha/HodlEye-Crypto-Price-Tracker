@@ -1,24 +1,37 @@
 let portfolioData = [];
 let coinColors = {};
-let addTransactionModal, editTransactionModal, colorConfigModal;
+let addTransactionModal, editTransactionModal, colorConfigModal, noteModal;
 let buyForm, sellForm;
 let portfolioList, pieChartCanvas, chartLegend;
 let editIdGlobal = null;
+let currentNoteId = null;
+let currentNoteType = null;
+
+function formatPrice(value) {
+  if (isNaN(value)) return "-";
+  if (value < 0.01) return value.toFixed(6);
+  if (value < 1) return value.toFixed(4);
+  return value.toFixed(2);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   addTransactionModal = document.getElementById("addTransactionModal");
   editTransactionModal = document.getElementById("editTransactionModal");
   colorConfigModal = document.getElementById("colorConfigModal");
+  noteModal = document.getElementById("noteModal");
   buyForm = document.getElementById("buyForm");
   sellForm = document.getElementById("sellForm");
   portfolioList = document.getElementById("portfolioList");
   pieChartCanvas = document.getElementById("portfolioPieChart");
   chartLegend = document.getElementById("chartLegend");
+  
   window.addEventListener("click", (event) => {
     if (event.target === addTransactionModal) closeAddTransactionModal();
     if (event.target === editTransactionModal) closeEditTransactionModal();
     if (event.target === colorConfigModal) closeColorConfigModal();
+    if (event.target === noteModal) closeNoteModal();
   });
+  
   loadCoinColorsFromStorage();
   loadPortfolioData();
   setInterval(() => {
@@ -55,12 +68,14 @@ function renderPortfolio() {
     if (!grouped[t.symbol]) grouped[t.symbol] = [];
     grouped[t.symbol].push(t);
   });
+  
   for (let sym in grouped) {
     const section = document.createElement("div");
     section.className = "coin-section";
     const heading = document.createElement("h2");
     heading.textContent = sym;
     section.appendChild(heading);
+    
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     thead.innerHTML = `
@@ -76,9 +91,11 @@ function renderPortfolio() {
       </tr>
     `;
     table.appendChild(thead);
+    
     const tbody = document.createElement("tbody");
     let totalAmount = 0;
     let totalCost = 0;
+    
     grouped[sym].forEach(tx => {
       const currentTotal = tx.amount * tx.currentPrice;
       const initialTotal = tx.amount * tx.buyPrice;
@@ -86,33 +103,40 @@ function renderPortfolio() {
       const pct = initialTotal === 0 ? 0 : (diff / initialTotal) * 100;
       totalAmount += tx.amount;
       totalCost += initialTotal;
+      
       const row = document.createElement("tr");
       const diffClass = diff >= 0 ? "positive" : "negative";
       const editButton = `<span class="edit-button" onclick="openEditTransactionModal('${tx.id}')">✎</span>`;
+      const noteButton = `<span class="note-button ${tx.note ? 'has-note' : 'no-note'}" onclick="openNoteModal('${tx.id}', 'portfolio')">✉</span>`;
+      
       row.innerHTML = `
         <td>${tx.symbol}</td>
         <td>${tx.amount}</td>
-        <td>${tx.buyPrice}</td>
-        <td>${tx.currentPrice.toFixed(2)}</td>
+        <td>${formatPrice(tx.buyPrice)}</td>
+        <td>${formatPrice(tx.currentPrice)}</td>
         <td>${(tx.amount * tx.buyPrice).toFixed(2)}</td>
         <td class="${diffClass}">${diff.toFixed(2)}</td>
         <td class="${diffClass}">${pct.toFixed(2)}%</td>
-        <td>${tx.date}${editButton}</td>
+        <td>${tx.date}${editButton}${noteButton}</td>
       `;
       tbody.appendChild(row);
     });
+    
     const totalCurrent = totalAmount * (grouped[sym][0].currentPrice || 0);
     const totalDiff = totalCurrent - totalCost;
     const totalPct = totalCost === 0 ? 0 : (totalDiff / totalCost) * 100;
     const avgBuyPrice = totalAmount === 0 ? 0 : totalCost / totalAmount;
+    
     const totalRow = document.createElement("tr");
     totalRow.className = "summary-row";
     const summaryClass = totalDiff >= 0 ? "positive" : "negative";
     totalRow.innerHTML = `
       <td>${sym} (Total)</td>
       <td>${totalAmount.toFixed(6)}</td>
-      <td>Ø ${avgBuyPrice.toFixed(2)}</td>
-      <td>${(grouped[sym][0].currentPrice || 0).toFixed(2)}</td>
+
+      <td>Ø ${formatPrice(avgBuyPrice)}</td>
+
+      <td>${formatPrice(grouped[sym][0].currentPrice || 0)}</td>
       <td>${totalCost.toFixed(2)}</td>
       <td class="${summaryClass}">${totalDiff.toFixed(2)}</td>
       <td class="${summaryClass}">${totalPct.toFixed(2)}%</td>
@@ -147,6 +171,7 @@ function drawPieChart() {
     if (!grouped[t.symbol]) grouped[t.symbol] = 0;
     grouped[t.symbol] += t.currentPrice * t.amount;
   });
+  
   let totalAll = 0;
   let coinValues = [];
   for (let s in grouped) {
@@ -155,12 +180,14 @@ function drawPieChart() {
   for (let s in grouped) {
     coinValues.push({ symbol: s, value: grouped[s] });
   }
+  
   const ctx = pieChartCanvas.getContext("2d");
   ctx.clearRect(0, 0, pieChartCanvas.width, pieChartCanvas.height);
   const centerX = pieChartCanvas.width / 2;
   const centerY = pieChartCanvas.height / 2;
   const radius = Math.min(centerX, centerY) - 10;
   let startAngle = 0;
+  
   coinValues.forEach(item => {
     const sliceAngle = totalAll === 0 ? 0 : (item.value / totalAll) * 2 * Math.PI;
     if (!coinColors[item.symbol]) {
@@ -174,6 +201,7 @@ function drawPieChart() {
     ctx.fill();
     startAngle += sliceAngle;
   });
+  
   renderChartLegend(coinValues, totalAll);
 }
 
@@ -190,6 +218,50 @@ function renderChartLegend(coinValues, totalAll) {
     chartLegend.appendChild(div);
   });
 }
+
+
+function openNoteModal(id, type) {
+  currentNoteId = id;
+  currentNoteType = type;
+  noteModal.style.display = "block";
+  
+  if (type === 'portfolio') {
+    const tx = portfolioData.find(x => String(x.id) === String(id));
+    document.getElementById("noteText").value = tx?.note || "";
+  }
+}
+
+function closeNoteModal() {
+  noteModal.style.display = "none";
+}
+
+function saveNote() {
+  const noteText = document.getElementById("noteText").value;
+  const endpoint = currentNoteType === 'portfolio' 
+    ? "/api/portfolio/note" 
+    : "/api/trade_summary/note"; 
+
+  fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      id: currentNoteId, 
+      note: noteText 
+    }),
+    credentials: "include"
+  })
+  .then(r => r.json())
+  .then(j => {
+    if (j.error) {
+      alert(j.error);
+    } else {
+      closeNoteModal();
+      updatePrices(); // 
+    }
+  })
+  .catch(() => alert("Error saving note"));
+}
+
 
 function openAddTransactionModal() {
   addTransactionModal.style.display = "block";
@@ -216,10 +288,12 @@ function confirmBuy() {
   const amount = parseFloat(document.getElementById("buyAmount").value);
   const buyPrice = parseFloat(document.getElementById("buyPrice").value);
   const buyDate = document.getElementById("buyDate").value;
+  
   if (!symbol || isNaN(amount) || isNaN(buyPrice)) {
     alert("Bitte gültige Werte eingeben");
     return;
   }
+  
   const newId = Date.now() + Math.floor(Math.random() * 999999);
   fetch("/api/coinPrice?symbol=" + symbol, { credentials: "include" })
     .then(r => r.json())
@@ -257,18 +331,22 @@ function confirmSell() {
   const sel = document.getElementById("sellSelectTransaction");
   const val = sel.value;
   if (!val) return;
+  
   const sellAmount = parseFloat(document.getElementById("sellAmount").value);
   const sellPrice = parseFloat(document.getElementById("sellPrice").value);
   const sellDate = document.getElementById("sellDate").value;
+  
   if (isNaN(sellAmount) || isNaN(sellPrice) || !sellDate) {
     alert("Bitte gültige Werte eingeben");
     return;
   }
+  
   const parts = val.split("|");
   const sym = parts[0];
   const idx = parseInt(parts[1], 10);
   let selectedTransaction = null;
   let count = 0;
+  
   for (let i = 0; i < portfolioData.length; i++) {
     if (portfolioData[i].symbol === sym) {
       if (count === idx) {
@@ -278,6 +356,7 @@ function confirmSell() {
       count++;
     }
   }
+  
   if (!selectedTransaction) {
     alert("Ungültig");
     return;
@@ -314,6 +393,7 @@ function populateSellDropdown() {
     if (!grouped[t.symbol]) grouped[t.symbol] = [];
     grouped[t.symbol].push(t);
   });
+  
   for (let sym in grouped) {
     grouped[sym].forEach((tx, i) => {
       const opt = document.createElement("option");
@@ -348,13 +428,16 @@ function saveEditedTransaction() {
     alert("Keine gültige Transaktion gefunden");
     return;
   }
+  
   const newAmount = parseFloat(document.getElementById("editAmount").value);
   const newBuyPrice = parseFloat(document.getElementById("editBuyPrice").value);
   const newDate = document.getElementById("editDate").value;
+  
   if (isNaN(newAmount) || isNaN(newBuyPrice)) {
     alert("Bitte gültige Werte eingeben");
     return;
   }
+  
   fetch("/api/portfolio/edit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -380,11 +463,25 @@ function saveEditedTransaction() {
 }
 
 function deleteTransaction() {
+  openDeleteConfirmationModal();
+}
+
+function openDeleteConfirmationModal() {
+  document.getElementById("deleteConfirmationModal").style.display = "block";
+}
+
+function closeDeleteConfirmationModal() {
+  document.getElementById("deleteConfirmationModal").style.display = "none";
+}
+
+function confirmDeleteTransaction() {
   let t = portfolioData.find(x => String(x.id) === String(editIdGlobal));
   if (!t) {
-    alert("Keine gültige Transaktion gefunden");
+    alert("No valid transaction found");
+    closeDeleteConfirmationModal();
     return;
   }
+  
   fetch("/api/portfolio/delete", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -396,11 +493,12 @@ function deleteTransaction() {
     if (j.error) {
       alert(j.error);
     } else {
+      closeDeleteConfirmationModal();
       closeEditTransactionModal();
       updatePrices();
     }
   })
-  .catch(() => alert("Fehler bei Delete"));
+  .catch(() => alert("Error deleting transaction"));
 }
 
 function openColorConfigModal() {
@@ -417,12 +515,14 @@ function renderColorConfigList() {
   container.innerHTML = "";
   let syms = {};
   portfolioData.forEach(t => { syms[t.symbol] = true; });
+  
   Object.keys(syms).forEach(s => {
     const div = document.createElement("div");
     div.style.marginBottom = "0.5rem";
     const label = document.createElement("label");
     label.textContent = s + ": ";
     div.appendChild(label);
+    
     const input = document.createElement("input");
     input.type = "color";
     if (!coinColors[s]) {
@@ -467,3 +567,4 @@ function loadCoinColorsFromStorage() {
 function saveCoinColorsToStorage() {
   localStorage.setItem("coinColors", JSON.stringify(coinColors));
 }
+

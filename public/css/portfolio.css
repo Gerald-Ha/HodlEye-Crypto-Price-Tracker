@@ -205,3 +205,26 @@ button {
 }
 
 
+.note-button, .edit-button {
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+.note-button.has-note {
+  color: green;
+}
+
+.note-button.no-note {
+  color: red;
+}
+
+.note-input-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.note-input-row textarea {
+  flex: 1;
+}

@@ -1,4 +1,4 @@
-# HodlEye Crypto Price Tracker
+# HodlEye Crypto Portfolio & Price Tracker
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
@@ -125,15 +125,22 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 
 ## Portfolio Management
 
+<img src="https://github.com/user-attachments/assets/afea1c01-2016-46b1-b800-bafbf6c43351" width="500" height="auto">
+<img src="https://github.com/user-attachments/assets/933ea5ad-d480-4bc8-b142-5c607eea956b" width="500" height="auto">
+
+&nbsp;
+
 HodlEye includes robust portfolio management features to help you monitor and analyze your cryptocurrency investments:
 
 - **Live Portfolio**:  
-  View your active investments in real-time. This page displays essential details such as the coin symbol, amount, buy price, current price, invested amount (calculated as _amount × buy price_), profit/loss, percentage change, and buy date.  
+  View your active investments in real-time. This page displays essential details such as the coin symbol, amount, buy price, current price, invested amount (calculated as _amount × buy price_), profit/loss, percentage change, and buy date. 
+  The charts in “Portfolio Live” are updated every 10 seconds
   **Important:** When opening the Live Portfolio page, expect a 1-3 second delay while data is recalculated in real-time. Additionally, the live chart is refreshed every 10 seconds to ensure up-to-date pricing information.
 
 - **Trade Summary**:  
   This section provides a comprehensive breakdown of your closed trades, showing the actual profits or losses realized upon selling your assets. It includes information like the coin symbol, amount, buy price, invested amount, sell price, profit, percentage profit, buy date, and sell date. A date filter is available to help you analyze trade performance over specific time ranges.  
   The bottom bar in the Trade Summary page displays the cumulative invested amount, overall profit/loss, and overall percentage change.
+  
 
 These portfolio features enable you to have a clear, up-to-date overview of both your active and completed investments, empowering you to make informed trading decisions.
 

@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  hodleye:
+    build: .
+    image: hodleye-crypto-tracker:latest     
+    container_name: hodleye-container
+    env_file:
+      - .env
+    ports:
+      - "3099:3099"
+      - "5001:5001"
+    volumes:
+      - hodleye_data:/app/data               
+    restart: unless-stopped
+
+volumes:
+  hodleye_data:
+    external: true                           

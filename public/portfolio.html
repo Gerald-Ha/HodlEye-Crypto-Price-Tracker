@@ -22,6 +22,17 @@
     .content {
       flex: 1;
     }
+    .note-button, .edit-button {
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 16px;
+    }
+    .note-button.has-note {
+      color: green;
+    }
+    .note-button.no-note {
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -122,17 +133,38 @@
     <div class="modal-content">
       <span class="close" onclick="closeEditTransactionModal()">&times;</span>
       <h2>Edit / Delete Transaction</h2>
-      <label for="editSymbol">Symbol:</label>
-      <input type="text" id="editSymbol" disabled />
-      <label for="editAmount">Amount:</label>
-      <input type="number" step="0.000001" id="editAmount" />
-      <label for="editBuyPrice">Buy Price (USDT):</label>
-      <input type="number" step="0.01" id="editBuyPrice" />
-      <label for="editDate">Date:</label>
-      <input type="date" id="editDate" />
+
+      <div class="form-row">
+        <label for="editSymbol">Symbol:</label>
+        <input type="text" id="editSymbol" disabled />
+      </div>
+      <div class="form-row">
+        <label for="editAmount">Amount:</label>
+        <input type="number" step="0.000001" id="editAmount" />
+      </div>
+      <div class="form-row">
+        <label for="editBuyPrice">Buy Price (USDT):</label>
+        <input type="number" step="0.01" id="editBuyPrice" />
+      </div>
+      <div class="form-row">
+        <label for="editDate">Date:</label>
+        <input type="date" id="editDate" />
+      </div>
+
       <div class="edit-buttons">
         <button onclick="saveEditedTransaction()">Save</button>
         <button onclick="deleteTransaction()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="noteModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeNoteModal()">&times;</span>
+      <h2>Note</h2>
+      <div class="note-input-row">
+        <textarea id="noteText" rows="4" cols="50"></textarea>
+        <button onclick="saveNote()">Save</button>
       </div>
     </div>
   </div>
@@ -143,6 +175,17 @@
       <h2>Diagram colors</h2>
       <div id="colorConfigList"></div>
       <button onclick="saveColorConfig()">OK</button>
+    </div>
+  </div>
+  <div id="deleteConfirmationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeDeleteConfirmationModal()">&times;</span>
+      <h2>Delete Transaction</h2>
+      <p>Are you sure you want to delete this transaction?</p>
+      <div class="edit-buttons">
+        <button onclick="confirmDeleteTransaction()">Delete</button>
+        <button onclick="closeDeleteConfirmationModal()">Cancel</button>
+      </div>
     </div>
   </div>
 </body>

@@ -7,6 +7,7 @@
   <title>Portfolio: Trade Summary</title>
   <link rel="stylesheet" href="css/portfolio.css" />
   <script defer src="js/trade_summary.js"></script>
+  
   <style>
     html, body {
       height: 100%;
@@ -21,6 +22,17 @@
     .content {
       flex: 1;
     }
+    .note-button, .edit-button {
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 16px;
+    }
+    .note-button.has-note {
+      color: green;
+    }
+    .note-button.no-note {
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -32,8 +44,8 @@
         </div>
         <div class="grid-middle">
           <button onclick="window.location.href='portfolio.html'">Live Portfolio</button>
-          <button>Trade Summary</button>
           <button onclick="window.location.href='portfolio.html'">Add Transaction</button>
+          <button>Trade Summary</button>
         </div>
         <div class="grid-right">
           <button onclick="window.location.href='/logout'">Logout</button>
@@ -79,6 +91,60 @@
       </div>
       <div style="margin-top: 1rem;">
         <button onclick="applyDateFilter()">Apply filter</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editTradeModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditTradeModal()">&times;</span>
+      <h2>Edit Trade</h2>
+      <div class="form-row">
+        <label for="editTradeAmount">Amount:</label>
+        <input type="number" step="0.000001" id="editTradeAmount" />
+      </div>
+      <div class="form-row">
+        <label for="editTradeBuyPrice">Buy Price (USDT):</label>
+        <input type="number" step="0.01" id="editTradeBuyPrice" />
+      </div>
+      <div class="form-row">
+        <label for="editTradeSellPrice">Sell Price (USDT):</label>
+        <input type="number" step="0.01" id="editTradeSellPrice" />
+      </div>
+      <div class="form-row">
+        <label for="editTradeBuyDate">Buy Date:</label>
+        <input type="date" id="editTradeBuyDate" />
+      </div>
+      <div class="form-row">
+        <label for="editTradeSellDate">Sell Date:</label>
+        <input type="date" id="editTradeSellDate" />
+      </div>
+      <div class="edit-buttons">
+        <button onclick="saveEditedTrade()">Save</button>
+        <button onclick="deleteTrade()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="noteModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeNoteModal()">&times;</span>
+      <h2>Note</h2>
+      <div class="note-input-row">
+        <textarea id="noteText" rows="4" cols="50"></textarea>
+        <button onclick="saveNote()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deleteTradeConfirmationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeDeleteTradeConfirmationModal()">&times;</span>
+      <h2>Delete Trade</h2>
+      <p>Are you sure you want to delete this trade?</p>
+      <div class="edit-buttons">
+        <button onclick="confirmDeleteTrade()">Delete</button>
+        <button onclick="closeDeleteTradeConfirmationModal()">Cancel</button>
       </div>
     </div>
   </div>

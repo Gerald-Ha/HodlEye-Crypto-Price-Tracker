@@ -1,4 +1,4 @@
-const CURRENT_VERSION = "1.5.0";
+const CURRENT_VERSION = "1.5.1";
 
 function getUpdateUrl() {
     return "/api/update?t=" + new Date().getTime();
