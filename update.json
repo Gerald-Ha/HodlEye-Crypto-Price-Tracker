@@ -1,8 +1,24 @@
 {
-  "version": "1.5.1",
+  "version": "1.6.0",
   "changelog": [
-    "Adding Note Option in Portfolio Page",
-    "Fixing Editing Option in Trade Summary"
-    
+    "Revamped Alarm Modal with grouped alarms per coin and cleaner layout",
+    "Improved alignment and responsiveness of alarm input fields",
+    "Compact alarm boxes with hover effects and subtle delete buttons",
+    "Alarm modal now retains focus and resets fields after adding an alarm",
+    "Enter key submits alarm from any input field",
+    "Prevents duplicate alarms for same coin/price",
+    "Alarm titles now displayed with center-aligned divider lines",
+    "Alarm logic improved: server-side checks even without browser",
+    "Recurring alarms now persist and trigger correctly",
+    "Alarms are sorted and grouped by symbol and price",
+    "Last price check is stored per alarm to avoid threshold skips",
+    "API improved: endpoints usable for external tools (e.g., Windows app)",
+    "Better error handling and logging for API actions",
+    "Windows App UI redesigned: modern English layout, centered elements",
+    "Tray icon with context menu (Open/Exit) and minimize/close behavior",
+    "All texts and notifications are now in English",
+    "Auto-reconnect and connection recovery implemented",
+    "Notification appears if disconnected for more than 2 minutes",
+    "Resolved issue where HodlEye_Notify could not receive alarms from the 'HodlEye-Crypto-Price-Tracker' Docker container when no browser session was active"
   ]
 }

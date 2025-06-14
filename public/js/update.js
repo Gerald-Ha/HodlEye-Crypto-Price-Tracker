@@ -1,4 +1,4 @@
-const CURRENT_VERSION = "1.5.1";
+const CURRENT_VERSION = "1.6.0";
 
 function getUpdateUrl() {
     return "/api/update?t=" + new Date().getTime();
@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("currentVersion").textContent = `Version ${CURRENT_VERSION}`;
     checkForUpdates();
 
-    
     setInterval(checkForUpdates, 86400000);
-
 });
 
 function checkForUpdates() {
@@ -19,17 +17,14 @@ function checkForUpdates() {
         .then((data) => {
             let skippedVersion = localStorage.getItem("skippedVersion") || null;
 
-
             if (skippedVersion && data.version !== skippedVersion) {
                 localStorage.removeItem("skippedVersion");
                 skippedVersion = null;
             }
 
-
             if (compareVersions(data.version, CURRENT_VERSION) > 0) {
                 const updateAvailableEl = document.getElementById("updateAvailable");
                 updateAvailableEl.style.display = "inline";
-
 
                 updateAvailableEl.onclick = () => {
                     fetch(getUpdateUrl())
@@ -43,13 +38,13 @@ function checkForUpdates() {
                             openUpdateModal(data);
                         })
                         .catch((error) =>
-                            console.error("Fehler beim erneuten Abrufen des Updates:", error)
+                            console.error("Error fetching update again:", error)
                         );
                 };
             }
         })
         .catch((error) =>
-            console.error("Fehler beim Abrufen des Updates:", error)
+            console.error("Error fetching update:", error)
         );
 }
 
@@ -66,13 +61,10 @@ function compareVersions(v1, v2) {
 }
 
 function openUpdateModal(data) {
-  
     document.getElementById("updateVersion").textContent = data.version;
 
-   
     let changelogContainer = document.getElementById("updateChanges");
     changelogContainer.innerHTML = "";
-
 
     if (Array.isArray(data.changelog)) {
         let ul = document.createElement("ul");
@@ -83,14 +75,11 @@ function openUpdateModal(data) {
         });
         changelogContainer.appendChild(ul);
     } else {
-        
-        changelogContainer.textContent = data.changelog || "Kein Changelog vorhanden.";
+        changelogContainer.textContent = data.changelog || "No changelog available.";
     }
-
 
     window._updateData = data;
 
-   
     document.getElementById("updateModal").style.display = "block";
 }
 
@@ -99,13 +88,11 @@ function closeUpdateModal() {
 }
 
 function performUpdate() {
-   
     window.open("https://github.com/Gerald-Ha/HodlEye-Crypto-Price-Tracker", "_blank");
     closeUpdateModal();
 }
 
 function skipUpdate() {
-   
     if (window._updateData && window._updateData.version) {
         localStorage.setItem("skippedVersion", window._updateData.version);
     }

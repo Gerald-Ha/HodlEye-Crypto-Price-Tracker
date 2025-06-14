@@ -19,7 +19,7 @@ function loadTradeSummary() {
       renderTradeSummary(allTrades);
       updateBottomBar(allTrades);
     })
-    .catch(err => console.error("Fehler beim Laden der Trade Summary", err));
+    .catch(err => console.error("Error loading trade summary", err));
 }
 
 function renderTradeSummary(trades) {

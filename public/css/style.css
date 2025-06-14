@@ -238,10 +238,9 @@ body.light .crypto-box {
 
 
 #buyMeModal .modal-content {
-
-    width: 30%;
+    width: 400px;
+    max-width: 90%;
     overflow-x: hidden;
-
     text-align: center;
     position: absolute;
     top: 35%;
@@ -251,8 +250,11 @@ body.light .crypto-box {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 30px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
-
 
 #buyMeModal .close {
     position: absolute;
@@ -314,6 +316,7 @@ body.light .crypto-box {
     position: absolute;
     top: 35%;
     left: 50%;
+	max-width: 100%;
     transform: translate(-50%, -45%);
 
     flex-direction: column;
@@ -345,6 +348,35 @@ body.light .crypto-box {
     right: 15px;
     font-size: 24px;
     cursor: pointer;
+}
+
+#alarmModal .modal-content h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15em;
+    font-weight: bold;
+    margin: 18px 0 8px 0;
+    color: #00bfff;
+	padding-bottom: 6px;
+    letter-spacing: 1px;
+}
+
+#alarmModal .modal-content h3::before,
+#alarmModal .modal-content h3::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1.5px solid #444;
+    margin: 0 12px;
+    opacity: 0.5;
+}
+
+body.light #alarmModal .modal-content h3 {
+    color: #0077b6;
+}
+body.light #alarmModal .modal-content h3::before,
+body.light #alarmModal .modal-content h3::after {
+    border-bottom: 1.5px solid #bbb;
 }
 
 
@@ -453,12 +485,56 @@ body.light .api-label {
 
 
 .alarm-list-container {
-    display: grid;
-    grid-template-columns: repeat(2, 2fr);
-    gap: 10px;
-    max-height: 300px;
+    display: block;
+    max-height: 200px;
     overflow-y: auto;
     margin: 1em 0;
+}
+
+.alarm-group {
+    margin-bottom: 10px;
+}
+
+.alarm-group-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+#alarmModal .modal-content .alarm-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+#alarmModal .modal-content .alarm-row .alarm-col {
+    flex: 1 1 0;
+    min-width: 180px;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+#alarmModal .modal-content .alarm-row label {
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+}
+
+#alarmModal .modal-content .alarm-row select,
+#alarmModal .modal-content .alarm-row input {
+    width: 100%;
+    min-width: 120px;
+    max-width: 240px;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    font-size: 15px;
 }
 
 .alarm-item {
@@ -466,8 +542,23 @@ body.light .api-label {
     align-items: center;
     justify-content: space-between;
     background-color: #333;
-    padding: 6px;
+    padding: 3px 8px;
     border-radius: 3px;
+    font-size: 14px;
+    min-height: 28px;
+    transition: background 0.15s, box-shadow 0.15s;
+    height: 36px;
+}
+
+.alarm-item span {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.alarm-item:hover {
+    background-color: #444;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 body.light .alarm-item {
@@ -480,12 +571,20 @@ body.light .alarm-item {
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
-    padding: 5px 8px;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 15px;
+    margin-left: 8px;
+    transition: background 0.15s;
+    height: 22px;
+    width: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .alarm-delete-btn:hover {
-    background-color: #005f73;
+    background-color: #005f7a;
 }
 
 @font-face {
@@ -741,6 +840,279 @@ body.light .alarm-item {
     padding: 8px;
 }
 
-#alarmModal .modal-content button:last-child {
-    margin-top: 20px;
+.coffee-modal-header {
+    margin-bottom: 25px;
 }
+
+.coffee-icon-large {
+    font-size: 48px;
+    margin-bottom: 15px;
+    animation: coffeeSteam 2s ease-in-out infinite;
+}
+
+@keyframes coffeeSteam {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.05); }
+}
+
+.coffee-modal-header h2 {
+    color: #ecf0f1;
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.coffee-subtitle {
+    color: #bdc3c7;
+    margin: 0;
+    font-size: 14px;
+}
+
+.coffee-content {
+    width: 100%;
+}
+
+.payment-methods {
+    margin-bottom: 25px;
+}
+
+.payment-method {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.payment-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.payment-method h3 {
+    color: #ecf0f1;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.chain-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 0;
+}
+
+.chain-option {
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-weight: 500;
+}
+
+.chain-option.active {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.chain-option:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #bdc3c7;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.chain-option:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ecf0f1;
+}
+
+.wallet-address-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: flex-start;
+}
+
+.qr-code-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 100px;
+    text-align: center;
+}
+
+.qr-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.qr-code-placeholder p {
+    color: #bdc3c7;
+    margin: 0;
+    font-size: 12px;
+}
+
+.address-container {
+    flex: 1;
+    text-align: left;
+}
+
+.address-container label {
+    color: #ecf0f1;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.address-box {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.address-box:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #3498db;
+    transform: translateY(-1px);
+}
+
+.address-box span:first-child {
+    color: #ecf0f1;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.copy-icon {
+    color: #3498db;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.copy-hint {
+    color: #95a5a6;
+    font-size: 12px;
+    margin: 8px 0 0 0;
+    text-align: center;
+}
+
+.coffee-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+}
+
+.thank-you {
+    color: #ecf0f1;
+    font-size: 16px;
+    margin: 0 0 15px 0;
+    font-weight: 500;
+}
+
+.coffee-benefits {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.coffee-benefits span {
+    font-size: 20px;
+    animation: benefitFloat 3s ease-in-out infinite;
+}
+
+.coffee-benefits span:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.coffee-benefits span:nth-child(3) {
+    animation-delay: 2s;
+}
+
+@keyframes benefitFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Light mode styles */
+body.light #buyMeModal .modal-content {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light .coffee-modal-header h2 {
+    color: #2c3e50;
+}
+
+body.light .coffee-subtitle {
+    color: #6c757d;
+}
+
+body.light .payment-method {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .payment-method h3 {
+    color: #2c3e50;
+}
+
+body.light .chain-option:not(.active) {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6c757d;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .chain-option:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.1);
+    color: #495057;
+}
+
+body.light .qr-code-placeholder {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .qr-code-placeholder p {
+    color: #6c757d;
+}
+
+body.light .address-container label {
+    color: #2c3e50;
+}
+
+body.light .address-box {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .address-box:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: #3498db;
+}
+
+body.light .address-box span:first-child {
+    color: #2c3e50;
+}
+
+body.light .copy-hint {
+    color: #6c757d;
+}
+
+body.light .coffee-footer {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light .thank-you {
+    color: #2c3e50;
+}
+

@@ -1,6 +1,6 @@
 function openTradingViewModal(exchange, symbol) {
     const tradingViewSymbol = `${exchange}:${symbol}USDT`;
-    console.log("TradingView-Symbol =", tradingViewSymbol);
+    console.log("TradingView symbol =", tradingViewSymbol);
 
     const modal = document.getElementById("tradingViewModal");
     const container = document.getElementById("tradingViewModalContent");
@@ -45,9 +45,9 @@ function openTradingViewModal(exchange, symbol) {
     const widgetContainer = container.querySelector(".tradingview-widget-container");
     if (widgetContainer) {
         widgetContainer.appendChild(script);
-        console.log("TradingView-Widget-Skript korrekt dem Container hinzugefügt.");
+        console.log("TradingView widget script correctly added to container.");
     } else {
-        console.error("Fehler: Widget-Container nicht gefunden.");
+        console.error("Error: Widget container not found.");
     }
 }
 
@@ -59,5 +59,5 @@ function closeTradingViewModal() {
     
     const container = document.getElementById("tradingViewModalContent");
     container.innerHTML = "";
-    console.log("TradingView-Modal geschlossen und Inhalt bereinigt.");
+    console.log("TradingView modal closed and content cleared.");
 }

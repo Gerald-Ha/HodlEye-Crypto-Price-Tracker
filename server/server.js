@@ -10,7 +10,7 @@ const fetch = require("node-fetch");
 
 /*
  * Metadata
- * Version: 1.5.1
+ * Version: 1.6.0
  * Author/Dev: Gerald Hasani
  * Name: HodlEye Crypto Price Tracker
  * Email: contact@gerald-hasani.com
@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-  const publicPaths = ["/login", "/login.html"];
+  const publicPaths = ["/login", "/login.html", "/api/test-alarm", "/api/create-test-alarm", "/api/test-notification"];
   const staticFileExtensions = [".css", ".js", ".png", ".jpg", ".jpeg", ".svg"];
   if (req.session.loggedIn || publicPaths.includes(req.path) || staticFileExtensions.some(ext => req.path.endsWith(ext))) {
     return next();
@@ -53,6 +53,17 @@ app.post("/login", (req, res) => {
   }
 });
 
+
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.LOGIN_USER && password === process.env.LOGIN_PASS) {
+    req.session.loggedIn = true;
+    return res.json({ success: true, message: "Login successful" });
+  } else {
+    return res.status(401).json({ success: false, message: "Invalid login credentials" });
+  }
+});
+
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/login");
@@ -65,6 +76,10 @@ app.get("/logout", (req, res) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const clients = new Set();
+
+
+let alarmCheckInterval;
+let lastAlarmPrices = {}; 
 
 const DATA_FILE = path.join(__dirname, "..", "data", "data.json");
 if (!fs.existsSync(DATA_FILE)) {
@@ -187,7 +202,7 @@ app.put("/api/cryptos", (req, res) => {
   res.json({ success: true, cryptos: data.cryptos });
 });
 
-/* ------------- Notizen  ------------- */
+/* ------------- Notices ------------- */
 
 app.post("/api/portfolio/note", (req, res) => {
   const { id, note } = req.body;
@@ -531,16 +546,16 @@ app.get("/api/trade_summary", (req, res) => {
 app.post("/api/portfolio/sell", (req, res) => {
   const { id, sellAmount, sellPrice, sellDate } = req.body;
   if (!id || isNaN(sellAmount) || isNaN(sellPrice) || !sellDate) {
-    return res.status(400).json({ error: "Ungültige Daten" });
+    return res.status(400).json({ error: "Invalid data" });
   }
   const pf = readPortfolio();
   let txIndex = pf.transactions.findIndex(x => String(x.id) === String(id));
   if (txIndex === -1) {
-    return res.status(400).json({ error: "Transaktion nicht gefunden" });
+    return res.status(400).json({ error: "Transaction not found" });
   }
   let tx = pf.transactions[txIndex];
   if (sellAmount > tx.amount) {
-    return res.status(400).json({ error: "Verkaufsmenge überschreitet die vorhandene Menge" });
+    return res.status(400).json({ error: "Selling amount exceeds available amount" });
   }
   const profit = (parseFloat(sellPrice) - parseFloat(tx.buyPrice)) * sellAmount;
   const percentProfit = tx.buyPrice > 0 ? (profit / (tx.buyPrice * sellAmount)) * 100 : 0;
@@ -583,16 +598,16 @@ app.post("/api/portfolio/delete", (req, res) => {
 app.post("/api/portfolio/sell", (req, res) => {
   const { id, sellAmount, sellPrice, sellDate } = req.body;
   if (!id || isNaN(sellAmount) || isNaN(sellPrice) || !sellDate) {
-    return res.status(400).json({ error: "Ungültige Daten" });
+    return res.status(400).json({ error: "Invalid data" });
   }
   const pf = readPortfolio();
   let txIndex = pf.transactions.findIndex(x => String(x.id) === String(id));
   if (txIndex === -1) {
-    return res.status(400).json({ error: "Transaktion nicht gefunden" });
+    return res.status(400).json({ error: "Transaction not found" });
   }
   let tx = pf.transactions[txIndex];
   if (sellAmount > tx.amount) {
-    return res.status(400).json({ error: "Verkaufsmenge überschreitet die vorhandene Menge" });
+    return res.status(400).json({ error: "Selling amount exceeds available amount" });
   }
   const profit = (parseFloat(sellPrice) - parseFloat(tx.buyPrice)) * sellAmount;
   const percentProfit = tx.buyPrice > 0 ? (profit / (tx.buyPrice * sellAmount)) * 100 : 0;
@@ -683,13 +698,246 @@ function writePortfolio(data) {
 
 
 wss.on("connection", (ws) => {
+  console.log(`🔗 New WebSocket client connected. Total: ${clients.size + 1}`);
   clients.add(ws);
+  
+  
+  console.log(`📡 WebSocket client added. Current clients: ${clients.size}`);
+  
   ws.on("close", () => {
     clients.delete(ws);
+    console.log(`🔌 WebSocket client disconnected. Remaining clients: ${clients.size}`);
   });
+  
+  ws.on("error", (error) => {
+    console.error(`WebSocket error:`, error);
+  });
+  
+  
+  const welcomeMessage = {
+    message: "WebSocket connection established",
+    timestamp: new Date().toISOString()
+  };
+  ws.send(JSON.stringify(welcomeMessage));
+  console.log(`Welcome message sent to client`);
 });
 
 const PORT = process.env.PORT || 3099;
 server.listen(PORT, () => {
-  console.log("Server läuft auf Port " + PORT);
+  console.log("Server running on port " + PORT);
+  startAlarmChecking(); 
+});
+
+
+async function checkAlarmsServerSide() {
+  try {
+    console.log("Server-side alarm checking started...");
+    console.log(`Connected WebSocket clients: ${clients.size}`);
+    
+    const data = readData();
+    console.log(`Found alarms: ${data.alarms ? data.alarms.length : 0}`);
+    
+    if (!data.alarms || data.alarms.length === 0) {
+      console.log("No active alarms found");
+      return;
+    }
+
+    
+    data.alarms.forEach(alarm => {
+      if (!alarm.triggered || alarm.frequency === "Recurring") {
+        console.log(`📋 Active alarm: ${alarm.symbol} at ${alarm.price} (${alarm.direction}, ${alarm.frequency})`);
+      }
+    });
+
+    for (const alarm of data.alarms) {
+      if (alarm.triggered && alarm.frequency === "Once") {
+        console.log(`⏭️ One-time alarm ${alarm.symbol} already triggered, skipping...`);
+        continue;
+      }
+
+      console.log(`🔍 Checking alarm: ${alarm.symbol} at ${alarm.price} (${alarm.direction}, ${alarm.frequency})`);
+
+      try {
+        
+        let currentPrice = null;
+        const binSup = await binanceSupported(alarm.symbol);
+        const okxSup = await okxSupported(alarm.symbol);
+
+        console.log(`📡 API support for ${alarm.symbol}: Binance=${binSup}, OKX=${okxSup}`);
+
+        if (binSup) {
+          try {
+            currentPrice = await getBinancePrice(alarm.symbol);
+            console.log(`Binance price for ${alarm.symbol}: ${currentPrice}`);
+          } catch (error) {
+            console.log(`Binance error for ${alarm.symbol}:`, error.message);
+            if (okxSup) {
+              currentPrice = await getOkxPrice(alarm.symbol);
+              console.log(`OKX price for ${alarm.symbol}: ${currentPrice}`);
+            }
+          }
+        } else if (okxSup) {
+          currentPrice = await getOkxPrice(alarm.symbol);
+          console.log(`OKX price for ${alarm.symbol}: ${currentPrice}`);
+        }
+
+        if (currentPrice === null) {
+          console.log(`No price available for ${alarm.symbol}`);
+          continue;
+        }
+
+        
+        const alarmKey = `${alarm.symbol}_${alarm.price}_${alarm.direction}_${alarm.frequency}_${alarm.id}`;
+        const prevPrice = lastAlarmPrices[alarmKey] ?? null;
+        console.log(`Price comparison for ${alarm.symbol}: Previous=${prevPrice}, Current=${currentPrice}, Target=${alarm.price}`);
+        
+        if (prevPrice === null) {
+          lastAlarmPrices[alarmKey] = currentPrice;
+          console.log(`First price for alarm ${alarmKey} saved: ${currentPrice}`);
+          continue;
+        }
+
+        let conditionMet = false;
+        if (alarm.direction === "Rising") {
+          conditionMet = prevPrice < alarm.price && currentPrice >= alarm.price;
+        } else if (alarm.direction === "Falling") {
+          conditionMet = prevPrice > alarm.price && currentPrice <= alarm.price;
+        } else if (alarm.direction === "Both") {
+          const crossingUp = prevPrice < alarm.price && currentPrice >= alarm.price;
+          const crossingDown = prevPrice > alarm.price && currentPrice <= alarm.price;
+          conditionMet = crossingUp || crossingDown;
+        }
+
+        console.log(`🎯 Condition for ${alarm.symbol}: ${conditionMet ? 'MET' : 'Not met'}`);
+
+        if (conditionMet) {
+          const message = `ALARM (${alarm.frequency}, ${alarm.direction}): ${alarm.symbol} reached ${alarm.price}!`;
+          console.log(`ALARM TRIGGERED: ${message}`);
+          
+          
+          const notification = {
+            message: message,
+            timestamp: new Date().toISOString()
+          };
+
+          console.log(`📡 Sending notification to ${clients.size} connected clients...`);
+          
+          let sentCount = 0;
+          clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify(notification));
+              sentCount++;
+              console.log(`Notification sent to client ${sentCount}`);
+            } else {
+              console.log(`Client not ready (Status: ${client.readyState})`);
+            }
+          });
+          
+          console.log(`Total ${sentCount} notifications sent`);
+
+          
+          data.notifications.unshift(notification);
+          writeData(data);
+
+          
+          if (alarm.frequency === "Once") {
+            data.alarms = data.alarms.filter(a => a.id !== alarm.id);
+            console.log(`🗑️ One-time alarm ${alarm.symbol} deleted`);
+          } else if (alarm.frequency === "Recurring") {
+            
+            alarm.triggered = false;
+            console.log(`Recurring alarm ${alarm.symbol} reset for next trigger`);
+          }
+          writeData(data);
+        }
+
+        
+        lastAlarmPrices[alarmKey] = currentPrice;
+      } catch (error) {
+        console.error(`Error during alarm check for ${alarm.symbol}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error during server-side alarm checking:", error);
+  }
+}
+
+
+function startAlarmChecking() {
+  if (alarmCheckInterval) {
+    clearInterval(alarmCheckInterval);
+  }
+  
+  console.log("Starting server-side alarm checking...");
+  
+  
+  checkAlarmsServerSide();
+  
+  
+  alarmCheckInterval = setInterval(checkAlarmsServerSide, 1000);
+  console.log("Server-side alarm checking started (every 1 second)");
+}
+
+
+app.post("/api/test-alarm", (req, res) => {
+  try {
+    console.log("Test alarm checking started...");
+    checkAlarmsServerSide();
+    res.json({ success: true, message: "Alarm checking started" });
+  } catch (error) {
+    console.error("Error during test alarm:", error);
+    res.status(500).json({ error: "Test alarm failed" });
+  }
+});
+
+
+app.post("/api/create-test-alarm", (req, res) => {
+  try {
+    const data = readData();
+    const testAlarm = {
+      id: Date.now(),
+      symbol: "BTC",
+      price: 50000, 
+      frequency: "Once",
+      direction: "Rising",
+      triggered: false
+    };
+    
+    data.alarms.push(testAlarm);
+    writeData(data);
+    
+    console.log("Test alarm created:", testAlarm);
+    res.json({ success: true, alarm: testAlarm });
+  } catch (error) {
+    console.error("Error creating test alarm:", error);
+    res.status(500).json({ error: "Creating test alarm failed" });
+  }
+});
+
+
+app.post("/api/test-notification", (req, res) => {
+  try {
+    console.log("Test notification being sent...");
+    console.log(`Connected clients: ${clients.size}`);
+    
+    const testNotification = {
+      message: "TEST NOTIFICATION: This message comes from the server!",
+      timestamp: new Date().toISOString()
+    };
+
+    let sentCount = 0;
+    clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(testNotification));
+        sentCount++;
+        console.log(`Test notification sent to client ${sentCount}`);
+      }
+    });
+    
+    console.log(`Total ${sentCount} test notifications sent`);
+    res.json({ success: true, message: `${sentCount} test notifications sent` });
+  } catch (error) {
+    console.error("Error during test notification:", error);
+    res.status(500).json({ error: "Test notification failed" });
+  }
 });

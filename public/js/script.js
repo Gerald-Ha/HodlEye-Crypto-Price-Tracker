@@ -1,4 +1,3 @@
-
 document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', function(event) {
       
@@ -19,5 +18,5 @@ document.querySelectorAll('.modal').forEach(modal => {
         if (response.redirected) {
             window.location.href = response.url; 
         }
-    }).catch(error => console.error("Logout-Fehler:", error));
+    }).catch(error => console.error("Logout error:", error));
 }

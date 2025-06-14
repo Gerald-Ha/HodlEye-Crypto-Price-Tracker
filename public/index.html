@@ -68,7 +68,7 @@
           </button>
 
           <div class="version-info">
-            <span id="currentVersion">Version 1.5.1</span>
+            <span id="currentVersion">Version 1.6.0</span>
             <span
               id="updateAvailable"
               style="display: none; color: red; cursor: pointer"
@@ -201,33 +201,50 @@
     <div id="buyMeModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeBuyMeModal()">&times;</span>
-        <h2>Buy me a Coffee</h2>
-        <p><strong>Send me:</strong> USDT / Ethereum</p>
-        <p>
-          <strong>Chain:</strong>
-          <span
-            style="text-decoration: underline; cursor: pointer"
-            onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')"
-          >
-            ETH
-          </span>
-          /
-          <span
-            style="text-decoration: underline; cursor: pointer"
-            onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')"
-          >
-            BSC
-          </span>
-        </p>
-        <p>
-          <span
-            style="text-decoration: underline; cursor: pointer"
-            onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')"
-          >
-            0x26c2E3F6C854Af006520ec2ce433982866bB7632
-          </span>
-        </p>
-        <p>(When clicked, the address is copied to the clipboard.)</p>
+        
+        <div class="coffee-modal-header">
+          <div class="coffee-icon-large">☕</div>
+          <h2>Buy me a Coffee</h2>
+          <p class="coffee-subtitle">Support the development of HodlEye</p>
+        </div>
+
+        <div class="coffee-content">
+          <div class="payment-methods">
+            <div class="payment-method">
+              <div class="payment-icon">💎</div>
+              <h3>USDT / Ethereum</h3>
+              <p class="chain-selector">
+                <span class="chain-option active" onclick="selectChain('ETH')">ETH</span>
+                <span class="chain-option" onclick="selectChain('BSC')">BSC</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="wallet-address-section">
+            <div class="qr-code-placeholder">
+              <div class="qr-icon">📱</div>
+              <p>QR Code</p>
+            </div>
+            
+            <div class="address-container">
+              <label>Wallet Address:</label>
+              <div class="address-box" onclick="copyToClipboard('0x26c2E3F6C854Af006520ec2ce433982866bB7632')">
+                <span id="walletAddress">0x26c2E3F6C854Af006520ec2ce433982866bB7632</span>
+                <span class="copy-icon">📋</span>
+              </div>
+              <p class="copy-hint">Click to copy address</p>
+            </div>
+          </div>
+
+          <div class="coffee-footer">
+            <p class="thank-you">Thank you for your support! 🙏</p>
+            <div class="coffee-benefits">
+              <span>☕</span>
+              <span>🚀</span>
+              <span>💡</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -254,8 +271,8 @@
         <span class="close" onclick="closeCryptoNewsModal()">&times;</span>
         <h2>Crypto News</h2>
 
-        <input type="text" id="search" placeholder="Suche nach Artikeln..." />
-        <div id="news-feed">Lade News...</div>
+        <input type="text" id="search" placeholder="Search for articles..." />
+        <div id="news-feed">Loading news...</div>
       </div>
     </div>
 
@@ -292,7 +309,7 @@
     <div id="updateModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeUpdateModal()">&times;</span>
-        <h2 id="updateTitle">Update auf <span id="updateVersion"></span></h2>
+        <h2 id="updateTitle">Update to <span id="updateVersion"></span></h2>
         <p id="updateChanges"></p>
 
         <button onclick="performUpdate()">Update</button>

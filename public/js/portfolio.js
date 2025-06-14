@@ -256,10 +256,10 @@ function saveNote() {
       alert(j.error);
     } else {
       closeNoteModal();
-      updatePrices(); // 
+      updatePrices();
     }
   })
-  .catch(() => alert("Error saving note"));
+  .catch(() => alert("Network error"));
 }
 
 
@@ -290,7 +290,7 @@ function confirmBuy() {
   const buyDate = document.getElementById("buyDate").value;
   
   if (!symbol || isNaN(amount) || isNaN(buyPrice)) {
-    alert("Bitte gültige Werte eingeben");
+    alert("Please enter valid values");
     return;
   }
   
@@ -299,7 +299,7 @@ function confirmBuy() {
     .then(r => r.json())
     .then(j => {
       if (j.error) {
-        alert("Dieser Coin wird nicht unterstützt");
+        alert("This coin is not supported");
       } else {
         fetch("/api/portfolio/buy", {
           method: "POST",
@@ -324,7 +324,7 @@ function confirmBuy() {
         });
       }
     })
-    .catch(() => alert("Netzwerkfehler"));
+    .catch(() => alert("Network error"));
 }
 
 function confirmSell() {
@@ -337,7 +337,7 @@ function confirmSell() {
   const sellDate = document.getElementById("sellDate").value;
   
   if (isNaN(sellAmount) || isNaN(sellPrice) || !sellDate) {
-    alert("Bitte gültige Werte eingeben");
+    alert("Please enter valid values");
     return;
   }
   
@@ -358,7 +358,7 @@ function confirmSell() {
   }
   
   if (!selectedTransaction) {
-    alert("Ungültig");
+    alert("Invalid");
     return;
   }
   
@@ -382,7 +382,7 @@ function confirmSell() {
       closeAddTransactionModal();
     }
   })
-  .catch(() => alert("Fehler beim Sell"));
+  .catch(() => alert("Error during sell"));
 }
 
 function populateSellDropdown() {
@@ -409,7 +409,7 @@ function openEditTransactionModal(id) {
   editIdGlobal = id;
   let t = portfolioData.find(x => String(x.id) === String(id));
   if (!t) {
-    alert("Keine gültige Transaktion gefunden");
+    alert("No valid transaction found");
     return;
   }
   document.getElementById("editSymbol").value = t.symbol;
@@ -425,7 +425,7 @@ function closeEditTransactionModal() {
 function saveEditedTransaction() {
   let t = portfolioData.find(x => String(x.id) === String(editIdGlobal));
   if (!t) {
-    alert("Keine gültige Transaktion gefunden");
+    alert("No valid transaction found");
     return;
   }
   
@@ -434,7 +434,7 @@ function saveEditedTransaction() {
   const newDate = document.getElementById("editDate").value;
   
   if (isNaN(newAmount) || isNaN(newBuyPrice)) {
-    alert("Bitte gültige Werte eingeben");
+    alert("Please enter valid values");
     return;
   }
   
@@ -459,7 +459,7 @@ function saveEditedTransaction() {
       updatePrices();
     }
   })
-  .catch(() => alert("Fehler bei Edit"));
+  .catch(() => alert("Error during edit"));
 }
 
 function deleteTransaction() {

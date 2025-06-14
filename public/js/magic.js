@@ -27,7 +27,7 @@ async function loadCryptosFromServer() {
         cryptoList = await resp.json();
         renderCryptoGrid();
     } catch (err) {
-        console.error("Fehler beim Laden der Kryptoliste:", err);
+        console.error("Error loading crypto list:", err);
     }
 }
 
@@ -72,9 +72,20 @@ async function loadAlarmsFromServer() {
     try {
         const resp = await fetch("/api/alarms");
         alarms = await resp.json();
+        
+        
+        alarms.sort((a, b) => {
+            
+            if (a.symbol !== b.symbol) {
+                return a.symbol.localeCompare(b.symbol);
+            }
+            
+            return parseFloat(b.price) - parseFloat(a.price);
+        });
+        
         renderAlarmList();
     } catch (err) {
-        console.error("Fehler beim Laden der Alarme:", err);
+        console.error("Error loading alarms:", err);
     }
 }
 
@@ -84,18 +95,35 @@ async function addAlarm() {
     const frequency = document.getElementById("alarmFrequency").value;
     const direction = document.getElementById("alarmDirection").value;
 
-    if (!symbol || isNaN(price)) return;
-    if (alarms.some(a => a.symbol === symbol && parseFloat(a.price) === price)) {
-        showErrorMessage("Alarm for this symbol and price already exists.");
+    if (!symbol || isNaN(price)) {
+        showErrorMessage("Please enter symbol and price!");
         return;
     }
+
+    
+    const duplicate = alarms.some(a => a.symbol === symbol && parseFloat(a.price) === price && a.frequency === frequency && a.direction === direction);
+    if (duplicate) {
+        showErrorMessage("An alarm with these settings already exists!");
+        return;
+    }
+
     try {
-        await fetch("/api/alarms", {
+        const resp = await fetch("/api/alarms", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({symbol, price, frequency, direction}),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ symbol, price, frequency, direction })
         });
-        loadAlarmsFromServer();
+        await resp.json();
+        
+        
+        await loadAlarmsFromServer();
+        
+        
+        document.getElementById("alarmPrice").value = "";
+        document.getElementById("alarmPrice").focus();
+        
+        
+        console.log("✅ Alarm successfully added");
     } catch (err) {
         showErrorMessage("Error adding alarm: " + err.message);
     }
@@ -117,7 +145,7 @@ async function loadNotificationsFromServer() {
         notifications = await resp.json();
         renderNotifications();
     } catch (err) {
-        console.error("Fehler beim Laden der Notifications:", err);
+        console.error("Error loading notifications:", err);
     }
 }
 
@@ -130,7 +158,7 @@ async function addNotification(msg) {
         });
         loadNotificationsFromServer();
     } catch (err) {
-        console.error("Fehler beim Hinzufügen einer Notification:", err);
+        console.error("Error adding notification:", err);
     }
 }
 
@@ -139,28 +167,66 @@ async function clearNotifications() {
         await fetch("/api/notifications", {method: "DELETE"});
         loadNotificationsFromServer();
     } catch (err) {
-        console.error("Fehler beim Löschen der Notifications:", err);
+        console.error("Error deleting notifications:", err);
     }
 }
 
 
 async function init() {
-    document.getElementById("alarmSound").src = "sound/" + userOptions.soundFile;
-    updateTheme(userOptions.darkMode);
-    await loadCryptosFromServer();
-    await loadAlarmsFromServer();
-    await loadNotificationsFromServer();
-
-    setInterval(() => {
-        cryptoList.forEach((symbol, index) => {
-            const elementId = "crypto-" + index;
-            fetchCryptoData(symbol, elementId).catch(() => setNotSupported(elementId));
-        });
-    }, 1000);
-
-    renderNotifications();
+    try {
+        await loadCryptosFromServer();
+        await loadAlarmsFromServer();
+        await loadNotificationsFromServer();
+        
+        
+        await sortExistingAlarms();
+        
+        renderCryptoGrid();
+        renderAlarmList();
+        renderNotifications();
+        
+        
+        const savedOptions = localStorage.getItem("userOptions");
+        if (savedOptions) {
+            userOptions = { ...userOptions, ...JSON.parse(savedOptions) };
+        }
+        
+        
+        const savedApiPref = localStorage.getItem("apiPreference");
+        if (savedApiPref) {
+            apiPreference = JSON.parse(savedApiPref);
+        }
+        
+        updateTheme(userOptions.darkMode);
+        document.getElementById("alarmSound").src = "sound/" + userOptions.soundFile;
+        
+        
+        setInterval(() => {
+            cryptoList.forEach((symbol, index) => {
+                const elementId = "crypto-" + index;
+                fetchCryptoData(symbol, elementId).catch(() => setNotSupported(elementId));
+            });
+        }, 1000);
+    } catch (err) {
+        console.error("Error during initialization:", err);
+    }
 }
 
+
+async function sortExistingAlarms() {
+    try {
+        const resp = await fetch("/api/alarms/sort", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+        const result = await resp.json();
+        if (result.success) {
+            console.log("✅ Existing alarms sorted");
+        }
+    } catch (err) {
+        console.error("Error sorting existing alarms:", err);
+    }
+}
 
 function renderCryptoGrid() {
     const grid = document.getElementById("cryptoGrid");
@@ -254,16 +320,26 @@ function renderAlarmList() {
     const container = document.getElementById("alarmListContainer");
     container.innerHTML = "";
     let grouped = {};
+    
     alarms.forEach((alarm) => {
         if (!grouped[alarm.symbol]) {
             grouped[alarm.symbol] = [];
         }
         grouped[alarm.symbol].push(alarm);
     });
+    
     Object.keys(grouped).forEach((symbol) => {
+        grouped[symbol].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    });
+    
+    Object.keys(grouped).forEach((symbol) => {
+        const groupDiv = document.createElement("div");
+        groupDiv.className = "alarm-group";
         const groupHeader = document.createElement("h3");
         groupHeader.textContent = symbol;
-        container.appendChild(groupHeader);
+        groupDiv.appendChild(groupHeader);
+        const groupList = document.createElement("div");
+        groupList.className = "alarm-group-list";
         grouped[symbol].forEach((alarm) => {
             const item = document.createElement("div");
             item.className = "alarm-item";
@@ -275,8 +351,10 @@ function renderAlarmList() {
             delBtn.className = "alarm-delete-btn";
             delBtn.onclick = () => deleteAlarm(alarm.id);
             item.appendChild(delBtn);
-            container.appendChild(item);
+            groupList.appendChild(item);
         });
+        groupDiv.appendChild(groupList);
+        container.appendChild(groupDiv);
     });
 }
 
@@ -315,11 +393,24 @@ function openAlarmModal() {
         option.textContent = symbol;
         dropdown.appendChild(option);
     });
+    
+    
+    setupEnterKeyHandlers();
+    
+    
+    document.getElementById("alarmPrice").focus();
+    
     renderAlarmList();
 }
 
 function closeAlarmModal() {
     document.getElementById("alarmModal").style.display = "none";
+    
+    
+    document.getElementById("alarmSymbol").value = "";
+    document.getElementById("alarmPrice").value = "";
+    document.getElementById("alarmFrequency").value = "Once";
+    document.getElementById("alarmDirection").value = "Rising";
 }
 
 function openOptionsModal() {
@@ -480,7 +571,7 @@ async function saveCryptoList() {
             body: JSON.stringify({cryptoList: cryptoList}),
         });
     } catch (err) {
-        console.error("Fehler beim Speichern der Kryptoliste:", err);
+        console.error("Error saving crypto list:", err);
     }
 }
 
@@ -647,7 +738,7 @@ function updateCryptoBox({symbol, elementId, apiUsed, dailyOpen, hourlyOpen, las
 function checkAlarms(symbol, currentPrice) {
     alarms.forEach((alarm) => {
         if (alarm.symbol !== symbol) return;
-        if (alarm.triggered) return;
+        if (alarm.triggered && alarm.frequency === "Once") return;
 
         const alarmPrice = parseFloat(alarm.price);
         const prevPrice = lastPrices[symbol] || null;
@@ -667,10 +758,12 @@ function checkAlarms(symbol, currentPrice) {
         if (conditionMet) {
             const msg = `⚠️ ALARM (${alarm.frequency}, ${alarm.direction}): ${symbol} reached ${alarmPrice}!`;
             showAlarmPopup(msg);
+            
             if (alarm.frequency === "Once") {
                 deleteAlarm(alarm.id);
-            } else {
-                alarm.triggered = true;
+            } else if (alarm.frequency === "Recurring") {
+                alarm.triggered = false;
+                updateAlarmOnServer(alarm);
             }
         }
     });
@@ -717,8 +810,8 @@ function copyToClipboard(address) {
                 alert("Address is copied to the clipboard.");
             })
             .catch((err) => {
-                console.error("Clipboard API Fehler:", err);
-                alert("Fehler beim Kopieren der Adresse.");
+                console.error("Clipboard API error:", err);
+                alert("Error copying address.");
             });
     } else {
         let textArea = document.createElement("textarea");
@@ -740,8 +833,8 @@ function copyToClipboard(address) {
             document.execCommand("copy");
             alert("Address is copied to the clipboard.");
         } catch (err) {
-            console.error("Fallback Copy Fehler:", err);
-            alert("Fehler beim Kopieren der Adresse.");
+            console.error("Fallback copy error:", err);
+            alert("Error copying address.");
         }
         document.body.removeChild(textArea);
     }
@@ -788,8 +881,8 @@ function copyToClipboard(address) {
             alert("Address is copied to the clipboard.");
         })
         .catch((err) => {
-            console.error("Clipboard API Fehler:", err);
-            alert("Fehler beim Kopieren der Adresse.");
+            console.error("Clipboard API error:", err);
+            alert("Error copying address.");
         });
     } else {
         let textArea = document.createElement("textarea");
@@ -811,9 +904,81 @@ function copyToClipboard(address) {
             document.execCommand("copy");
             alert("Address is copied to the clipboard.");
         } catch (err) {
-            console.error("Fallback Copy Fehler:", err);
-            alert("Fehler beim Kopieren der Adresse.");
+            console.error("Fallback copy error:", err);
+            alert("Error copying address.");
         }
         document.body.removeChild(textArea);
     }
+}
+
+async function updateAlarmOnServer(alarm) {
+    try {
+        await fetch(`/api/alarms/${alarm.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(alarm)
+        });
+    } catch (error) {
+        console.error('Error updating the alarm on the server:', error);
+    }
+}
+
+
+function setupEnterKeyHandlers() {
+    const priceInput = document.getElementById("alarmPrice");
+    const symbolSelect = document.getElementById("alarmSymbol");
+    const frequencySelect = document.getElementById("alarmFrequency");
+    const directionSelect = document.getElementById("alarmDirection");
+    
+   
+    priceInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addAlarm();
+        }
+    });
+    
+   
+    symbolSelect.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addAlarm();
+        }
+    });
+    
+   
+    frequencySelect.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addAlarm();
+        }
+    });
+    
+    
+    directionSelect.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addAlarm();
+        }
+    });
+}
+
+function selectChain(chain) {
+    document.querySelectorAll('.chain-option').forEach(option => {
+        option.classList.remove('active');
+    });
+    
+    event.target.classList.add('active');
+    
+    const walletAddress = document.getElementById('walletAddress');
+    if (chain === 'ETH') {
+        walletAddress.textContent = '0x26c2E3F6C854Af006520ec2ce433982866bB7632';
+    } else if (chain === 'BSC') {
+        walletAddress.textContent = '0x26c2E3F6C854Af006520ec2ce433982866bB7632';
+    }
+    
+    const addressBox = document.querySelector('.address-box');
+    addressBox.onclick = () => copyToClipboard(walletAddress.textContent);
 }
