@@ -1,4 +1,4 @@
-# HodlEye Crypto Price Tracker
+# HodlEye Crypto Portfolio & Price Tracker V 1.6.0 - Juni 2025 Update
 
 A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binance and OKX) with **unlimited alarms** and **unlimited crypto tracking**, outshining typical TradingView limitations. It also provides quick access to multiple RSS-based crypto news sources and a live Economic Calendar.
 
@@ -6,9 +6,7 @@ A lightweight Docker-based web tool to monitor cryptocurrency prices (via Binanc
 
 ## Demo
 
-Visit [HodlEye Demo](https://hodleye.gerald-hasani.com)
-
-
+Check out the live demo here: [HodlEye Demo](https://hodleye.gerald-hasani.com/)
 
 **Default Login Data**  
 **User:** admin  
@@ -27,18 +25,20 @@ Visit [HodlEye Demo](https://hodleye.gerald-hasani.com)
    - [Alarm Functionality](#alarm-functionality)
    - [Crypto News](#crypto-news)
    - [Economic Calendar](#economic-calendar)
-   - [TradingView Chart](#tradingview-chart)  
-3. [Installation & Usage](#installation--usage)
+   - [TradingView Chart](#tradingview-chart)
+3. [Portfolio Management](#portfolio-management)   
+4. [Installation & Usage](#installation--usage)
    - [Requirements](#requirements)
+   - [Environment variables (.env)](#environment-variables-env)
    - [Docker Build & Run](#docker-build--run)
-4. [Windows Notification App: HodlEye_Notify](#windows-notification-app-hodleye_notify)
-5. [Project Structure](#project-structure)
+5. [Windows Notification App: HodlEye_Notify](#windows-notification-app-hodleye_notify)
+6. [Project Structure](#project-structure)
    - [Frontend (index.html & magic.js)](#frontend-indexhtml--magicjs)
    - [News Feed Server (Node.js)](#news-feed-server-nodejs)
-6. [Important Notes / Limitations](#important-notes--limitations)
-7. [Coming Soon](#coming-soon)
-8. [Privacy & Data Disclaimer](#privacy--data-disclaimer)
-9. [License](#license)
+7. [Important Notes / Limitations](#important-notes--limitations)
+8. [Coming Soon](#coming-soon)
+9. [Privacy & Data Disclaimer](#privacy--data-disclaimer)
+10. [License](#license)
 
 ---
 
@@ -115,8 +115,39 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 - The **TradingView Chart** Crypto Box Currency click opens a modal with a Tradingview Chart Window iframe, get a better overview of the charts.
 <img src="https://github.com/user-attachments/assets/53bd1553-7679-40c1-afa8-0330cd28a71b" width="600" height="auto">
 
----
+
 &nbsp;
+### Login Screen
+- The **Login Screen** provides a certain level of security from prying eyes.
+<img src="https://github.com/user-attachments/assets/03ff8333-78fc-49f6-b794-f6698546ab49" width="500" height="auto">
+
+---
+
+## Portfolio Management
+
+<img src="https://github.com/user-attachments/assets/afea1c01-2016-46b1-b800-bafbf6c43351" width="500" height="auto">
+<img src="https://github.com/user-attachments/assets/933ea5ad-d480-4bc8-b142-5c607eea956b" width="500" height="auto">
+
+&nbsp;
+
+HodlEye includes robust portfolio management features to help you monitor and analyze your cryptocurrency investments:
+
+- **Live Portfolio**:  
+  View your active investments in real-time. This page displays essential details such as the coin symbol, amount, buy price, current price, invested amount (calculated as _amount × buy price_), profit/loss, percentage change, and buy date. 
+  The charts in “Portfolio Live” are updated every 10 seconds
+  **Important:** When opening the Live Portfolio page, expect a 1-3 second delay while data is recalculated in real-time. Additionally, the live chart is refreshed every 10 seconds to ensure up-to-date pricing information.
+
+- **Trade Summary**:  
+  This section provides a comprehensive breakdown of your closed trades, showing the actual profits or losses realized upon selling your assets. It includes information like the coin symbol, amount, buy price, invested amount, sell price, profit, percentage profit, buy date, and sell date. A date filter is available to help you analyze trade performance over specific time ranges.  
+  The bottom bar in the Trade Summary page displays the cumulative invested amount, overall profit/loss, and overall percentage change.
+  
+
+These portfolio features enable you to have a clear, up-to-date overview of both your active and completed investments, empowering you to make informed trading decisions.
+
+---
+
+&nbsp;
+
 ## Installation & Usage
 
 ### Requirements
@@ -124,6 +155,28 @@ The tool refreshes prices every **1 seconds**, which may introduce a slight dela
 - [Docker](https://www.docker.com/) installed.
 - (Optional) [Docker-Compose](https://docs.docker.com/compose/) if you want a more complex or multi-container setup.
 
+
+&nbsp;
+---
+### Environment Variables (.env)
+
+You can store the username, password, and a secret key in the `.env` file to protect the application from unauthorized access. **Make sure to change the default credentials to your own secure values**:
+
+```
+LOGIN_USER=admin
+LOGIN_PASS=admin
+SESSION_SECRET=some_secret_key
+```
+
+- **LOGIN_USER**: The username for logging into the application.
+- **LOGIN_PASS**: The password for logging into the application.
+- **SESSION_SECRET**: A random, secret value to secure sessions.
+
+After building and starting the container, a login prompt will appear when accessing the application, ensuring that only authorized users can proceed.
+
+&nbsp;
+
+---
 ### Docker Build & Run
 
 1. **Clone this repository**
@@ -203,6 +256,7 @@ Below is an example directory tree (based on your structure). Yours may vary sli
 
 ```
 HodlEye-Crypto-Price-Tracker
+├── .env
 ├── Dockerfile
 ├── LICENSE.txt
 ├── PRIVACY.md
@@ -210,6 +264,11 @@ HodlEye-Crypto-Price-Tracker
 ├── data
 │   └── data.json
 ├── public
+│   ├── css
+│   │   ├── login.css
+│   │   ├── portfolio.css
+│   │   ├── responsive.css
+│   │   └── style.css
 │   ├── font
 │   │   └── BreeSerif-Regular.ttf
 │   ├── images
@@ -218,23 +277,22 @@ HodlEye-Crypto-Price-Tracker
 │   │   ├── favicon.png
 │   │   └── github-mark.svg
 │   ├── index.html
-│   ├── magic.js
-│   ├── news.js
-│   ├── tradingview.js
-│   ├── script.js
-│   ├── responsive.css
+│   ├── js
+│   │   ├── magic.js
+│   │   ├── news.js
+│   │   ├── portfolio.js
+│   │   ├── script.js
+│   │   ├── trade_summary.js
+│   │   ├── tradingview.js
+│   │   └── update.js
+│   ├── login.html
+│   ├── portfolio.html
 │   ├── sound
 │   │   ├── cashing.mp3
 │   │   └── ping.mp3
-│   ├── style.css
-│   └── update.js
+│   └── trade_summary.html
 ├── server
 │   ├── newsfeed
-│   │   ├── node_modules
-│   │   ├── package-lock.json
-│   │   ├── package.json
-│   │   └── server.js
-│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
 │   └── server.js
@@ -242,6 +300,7 @@ HodlEye-Crypto-Price-Tracker
 │   ├── cashing.mp3
 │   └── ping.mp3
 └── update.json
+
 ```
 
 &nbsp;
@@ -306,14 +365,13 @@ _(Within Docker, it’s already bundled, so just expose `5001`.)_
 ---
 
 &nbsp;
-## Coming Soon
+## Upcoming planned changes with the next versions
 
-Exciting new features and improvements are on the way! Here are some planned updates:
 
-- **Portfolio Management**: Track your crypto holdings in real-time with easy-to-read analytics.
-- **More Integrations**: Expanding support for additional exchanges and data sources.
-- **Automatic alarm in the event of a sharp price drop of 10% within 1 hour**
+- **Big Movement Alarm**: Alarm function for rapid short or long events.
+- **Android**: Android app with synchronization option to HodlEye Docker (First early alpha already available internally)
 - **HodlEye Notify Alarm with various sound selections and HodlEye Alarms**
+- **Windows HodlEye Notify Update**: Windows app bugfix and updates
 
 
 Stay tuned for updates!
@@ -329,9 +387,12 @@ Stay tuned for updates!
 - **External Services**: Certain features (e.g., news feeds, iframes) rely on third-party websites or APIs. We do not control and are not responsible for the data-collection practices or privacy policies of these external providers. Please refer to the privacy policies of those services for details.
 
 ---
+&nbsp;
 
+## 🛡️ License
+Custom Non-Commercial License. See `LICENSE` file for details.
 
-
+---
 
 
 &nbsp;
